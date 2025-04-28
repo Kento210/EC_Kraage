@@ -3,98 +3,293 @@
 <head>
   <meta charset="UTF-8">
   <title>Harvest Market - あなたの育てた野菜が、誰かの暮らしを豊かに</title>
-  <meta name="viewport" content="width=1024">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="シェア畑の利用者が育てた作物を販売できる日本語UIのオンラインECプラットフォーム『Harvest Market』のトップページ。北欧シンプル系で温かみとナチュラル感を大切に。">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
   <style>
-    html { background: #f8f5ee; }
+    /* カラーパレット変数 */
+    :root {
+      --color-bg-main: #f8f5ee;
+      --color-text-main: #35432b;
+      --color-text-dark: #355b30;
+      --color-text-title: #4f694e;
+      --color-accent: #45653e;
+      --color-card-category: #f5f2e4;
+      --color-card-product: #fffdfa;
+      --color-card-story: #f1f8f3;
+      --shadow-sm: 0 2px 8px 0 rgba(155,168,104,0.05);
+      --shadow-md: 0 3px 12px 0 rgba(120,130,80,0.08);
+      --shadow-lg: 0 6px 16px 0 rgba(102,128,95,0.12);
+      --radius-sm: 1rem;
+      --radius-md: 1.35rem;
+      --radius-lg: 1.75rem;
+      --transition-fast: 0.15s ease;
+      --transition-hover: 0.2s ease;
+    }
+    
+    html { background: var(--color-bg-main); }
+    
     body {
       font-family: 'Noto Sans JP', 'Quicksand', sans-serif;
-      background: #f8f5ee;
-      color: #35432b;
+      background: var(--color-bg-main);
+      color: var(--color-text-main);
       font-size: 1.05rem;
       margin: 0;
+      overflow-x: hidden;
     }
+    
     .main-bg {
-      background: linear-gradient(135deg,#e4ede1 40%,#f3eada 100%);
+      background: linear-gradient(135deg, #e4ede1 40%, #f3eada 100%);
     }
-    .category-card:hover, .product-card:hover {
-      box-shadow: 0 6px 16px 0 rgba(102,128,95,.08);
+    
+    /* 基本カードスタイル */
+    .card-base {
+      display: flex;
+      flex-direction: column;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+    }
+    
+    .card-base:hover {
+      box-shadow: var(--shadow-lg);
       transform: translateY(-2px) scale(1.012);
-      transition: .2s;
+      transition: var(--transition-hover);
     }
+    
+    /* タッチデバイス用のホバー対応 */
+    @media (hover: none) {
+      .card-base:active {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-1px) scale(1.005);
+      }
+    }
+    
+    /* 特定カードスタイル */
+    .category-card {
+      background: var(--color-card-category);
+      padding: 1.35rem 1.15rem;
+      min-width: 176px;
+      min-height: 100px;
+      align-items: center;
+      font-weight: 600;
+      color: var(--color-text-dark);
+    }
+    
+    .product-card {
+      background: var(--color-card-product);
+    }
+    
+    .story-card {
+      background: var(--color-card-story);
+      border-radius: var(--radius-md);
+      padding: 1.85rem;
+      margin-top: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
     .main-visual {
-      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
-      border-radius: 1.75rem;
+      background: url('https://images.unsplash.com/photo-1523741543316-beb7fc7023d8?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+      border-radius: var(--radius-lg);
       min-height: 340px;
       display: flex;
       align-items: center;
       position: relative;
       box-shadow: 0 4px 24px 0 rgba(62,80,36,.12);
     }
+    
     .main-visual::after {
       content: "";
       position: absolute;
       top:0; left:0; right:0; bottom:0;
-      border-radius: 1.75rem;
+      border-radius: var(--radius-lg);
       background: linear-gradient(120deg,rgba(245,243,232,0.96) 65%,rgba(244,248,228,0.62) 100%);
       pointer-events: none;
     }
+    
     .main-visual-content {
       position: relative;
       z-index: 1;
       padding-left: 4rem;
       max-width: 45%;
     }
-    @media (max-width: 900px) {
-      .main-visual-content { max-width: 80%; padding-left: 2rem;}
-      .main-visual { min-height: 210px;}
-    }
-    .category-card {
-      background: #f5f2e4;
-      border-radius: 1rem;
-      padding: 1.35rem 1.15rem;
-      min-width: 176px;
-      min-height: 100px;
-      box-shadow: 0 2px 9px 0 rgba(155,168,104,.03);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-weight: 600;
-      color: #355b30;
-      transition: box-shadow .15s,transform .12s;
-    }
-    .product-card {
-      background: #fffdfa;
-      border-radius: 1rem;
-      box-shadow: 0 2px 12px 0 rgba(120,130,80,.07);
-      display: flex;
-      flex-direction: column;
-      transition: box-shadow .15s,transform .10s;
-    }
-    .story-card {
-      background: #f1f8f3;
-      border-radius: 1.35rem;
-      padding: 1.85rem;
-      box-shadow: 0 1px 7px 0 rgba(120,130,80,.05);
-      margin-top: 2rem;
-    }
+    
     .logo-text {
       font-family: 'Quicksand', 'Noto Sans JP',sans-serif;
       font-weight: 700;
       font-size: 2.15rem;
       letter-spacing: .05em;
-      color: #45653e;
+      color: var(--color-accent);
       text-shadow: 0 1px 0 #f2fff4;
     }
+    
     .section-title {
       font-weight: 700;
       font-size: 1.22rem;
-      color: #4f694e;
+      color: var(--color-text-title);
       margin-bottom: 1.1rem;
       letter-spacing: .02em;
+    }
+    
+    /* モバイルメニュー */
+    .mobile-menu {
+      display: none;
+    }
+    
+    .hamburger-btn {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 21px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      z-index: 40;
+    }
+    
+    .hamburger-btn span {
+      width: 100%;
+      height: 3px;
+      background-color: var(--color-text-dark);
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+    
+    /* レスポンシブデザイン */
+    @media (max-width: 1024px) {
+      .main-bg {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      
+      header {
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+      }
+    }
+    
+    @media (max-width: 900px) {
+      .main-visual-content { 
+        max-width: 80%; 
+        padding-left: 2rem;
+      }
+      .main-visual { 
+        min-height: 210px;
+      }
+      
+      .story-card {
+        padding: 1.25rem;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        font-size: 1rem;
+      }
+      
+      .logo-text {
+        font-size: 1.7rem;
+      }
+      
+      .desktop-menu {
+        display: none;
+      }
+      
+      .hamburger-btn {
+        display: flex;
+      }
+      
+      .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--color-bg-main);
+        z-index: 35;
+        padding: 5rem 2rem 2rem;
+        flex-direction: column;
+      }
+      
+      .mobile-menu.active {
+        display: flex;
+      }
+      
+      .mobile-menu ul {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      
+      .mobile-menu a {
+        display: block;
+        font-size: 1.25rem;
+        padding: 0.5rem 0;
+      }
+      
+      .main-visual {
+        border-radius: var(--radius-md);
+      }
+      
+      .main-visual-content {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        max-width: 85%;
+      }
+      
+      .section-title {
+        font-size: 1.15rem;
+      }
+      
+      .story-card {
+        flex-direction: column;
+      }
+      
+      .story-card img {
+        margin-bottom: 1rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .main-bg {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+      }
+      
+      .main-visual {
+        padding: 1.5rem 1rem;
+        min-height: 180px;
+        border-radius: 0.75rem;
+      }
+      
+      .main-visual-content {
+        padding-left: 0.5rem;
+        max-width: 100%;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .about-section {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1.5rem;
+      }
+      
+      .category-card {
+        padding: 1rem 0.75rem;
+        min-height: 90px;
+      }
+      
+      .story-card {
+        padding: 1.25rem 1rem;
+      }
     }
   </style>
 </head>
@@ -107,7 +302,7 @@
         Harvest Market
       </span>
     </div>
-    <nav>
+    <nav class="desktop-menu">
       <ul class="flex gap-8 items-center text-green-900 font-semibold text-lg">
         <li>
           <a href="#" class="hover:underline">
@@ -126,21 +321,50 @@
         </li>
       </ul>
     </nav>
+    <button class="hamburger-btn" aria-label="メニュー" id="menuButton">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="mobile-menu" id="mobileMenu">
+      <ul class="text-green-900 font-semibold">
+        <li>
+          <a href="#" class="hover:bg-green-50 rounded-md px-3">
+            <i class="fas fa-search mr-2"></i>商品を探す
+          </a>
+        </li>
+        <li>
+          <a href="#" class="hover:bg-green-50 rounded-md px-3">
+            <i class="fas fa-plus-square mr-2"></i>出品する
+          </a>
+        </li>
+        <li>
+          <a href="#" class="hover:bg-green-50 rounded-md px-3">
+            <i class="fas fa-user-circle mr-2"></i>マイページ
+          </a>
+        </li>
+        <li class="mt-4">
+          <a href="#" class="hover:bg-green-50 rounded-md px-3">
+            <i class="fas fa-info-circle mr-2"></i>ご利用ガイド
+          </a>
+        </li>
+      </ul>
+    </div>
   </header>
 
-  <main class="main-bg px-8 py-8" style="max-width:950px;margin:0 auto;">
+  <main class="main-bg px-4 sm:px-8 py-6 sm:py-8" style="max-width:950px;margin:0 auto;">
     <!-- Main Visual -->
-    <div class="main-visual px-8 mb-9 mt-4">
+    <div class="main-visual px-4 sm:px-8 mb-6 sm:mb-9 mt-4">
       <div class="main-visual-content">
-        <h1 class="text-3xl font-bold text-green-900 mb-4" style="line-height:1.30">
+        <h1 class="text-2xl sm:text-3xl font-bold text-green-900 mb-2 sm:mb-4" style="line-height:1.30">
           あなたの育てた野菜が、<br>
           誰かの暮らしを豊かに
         </h1>
-        <p class="text-lg font-medium text-green-800 mb-5">
+        <p class="text-base sm:text-lg font-medium text-green-800 mb-3 sm:mb-5">
           「育てる喜び」から<br>
           「分かち合う歓び」へ。
         </p>
-        <span class="inline-block bg-green-100 bg-opacity-80 text-green-700 px-4 py-1 rounded-full text-base font-semibold shadow-sm">
+        <span class="inline-block bg-green-100 bg-opacity-80 text-green-700 px-3 py-1 rounded-full text-sm sm:text-base font-semibold shadow-sm">
           収穫体験 × ECマーケット
         </span>
       </div>
@@ -149,20 +373,20 @@
     <!-- Category List Section -->
     <section class="">
       <div class="section-title">カテゴリーから探す</div>
-      <div class="grid grid-cols-4 gap-6 mb-12 md:grid-cols-2 sm:grid-cols-1">
-        <div class="category-card">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mb-8 sm:mb-12">
+        <div class="card-base category-card">
           <i class="fas fa-leaf mb-2 text-2xl text-green-700"></i>
           季節の野菜
         </div>
-        <div class="category-card">
+        <div class="card-base category-card">
           <i class="fas fa-apple-alt mb-2 text-2xl text-green-600"></i>
           旬の果物
         </div>
-        <div class="category-card">
+        <div class="card-base category-card">
           <i class="fas fa-gift mb-2 text-2xl text-amber-700"></i>
           ギフト向けセット
         </div>
-        <div class="category-card">
+        <div class="card-base category-card">
           <i class="fas fa-seedling mb-2 text-2xl text-green-600"></i>
           オーガニック野菜
         </div>
@@ -172,10 +396,10 @@
     <!-- Picked Products -->
     <section class="">
       <div class="section-title">おすすめ収穫物</div>
-      <div class="grid grid-cols-3 gap-7 mb-10 md:grid-cols-1 sm:grid-cols-1">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-7 mb-8 sm:mb-10">
         <!-- Product 1 -->
-        <div class="product-card p-4">
-          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80"
+        <div class="card-base product-card p-4">
+          <img src="https://images.unsplash.com/photo-1576181256399-834e3b3a49bf?auto=format&fit=crop&w=400&q=80"
            alt="小松菜セット" class="rounded-lg mb-3 w-full h-40 object-cover">
           <div>
             <div class="font-bold text-green-900 text-lg mb-1">小松菜セット</div>
@@ -184,8 +408,8 @@
           </div>
         </div>
         <!-- Product 2 -->
-        <div class="product-card p-4">
-          <img src="https://images.unsplash.com/photo-1519864600974-8b7ad6a3b2a7?auto=format&fit=crop&w=400&q=80"
+        <div class="card-base product-card p-4">
+          <img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfca?auto=format&fit=crop&w=400&q=80"
            alt="旬のミニトマト" class="rounded-lg mb-3 w-full h-40 object-cover">
           <div>
             <div class="font-bold text-green-900 text-lg mb-1">旬のミニトマト</div>
@@ -194,8 +418,8 @@
           </div>
         </div>
         <!-- Product 3 -->
-        <div class="product-card p-4">
-          <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80"
+        <div class="card-base product-card p-4">
+          <img src="https://images.unsplash.com/photo-1655865634403-cfd9bdad656a?auto=format&fit=crop&w=400&q=80"
            alt="オーガニック人参" class="rounded-lg mb-3 w-full h-40 object-cover">
           <div>
             <div class="font-bold text-green-900 text-lg mb-1">オーガニック人参</div>
@@ -209,25 +433,25 @@
     <!-- Producers / Story Section -->
     <section>
       <div class="section-title">出品者紹介・ストーリー</div>
-      <div class="grid grid-cols-2 gap-9 sm:grid-cols-1">
-        <div class="story-card flex items-center gap-6">
-          <img src="https://images.unsplash.com/photo-1498661367879-c1491c1a044b?auto=format&fit=crop&w=96&q=80"
-            alt="山田さんプロフィール" class="w-24 h-24 object-cover rounded-full border-4 border-green-200">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-9">
+        <div class="story-card flex flex-col md:flex-row items-center gap-4 md:gap-6">
+          <img src="https://images.unsplash.com/photo-1620399008024-896ce2ed7ec5?auto=format&fit=crop&w=128&q=80"
+            alt="山田さんプロフィール" class="w-20 h-20 md:w-24 md:h-24 object-cover rounded-full border-4 border-green-200">
           <div>
             <div class="font-semibold text-green-800 text-lg mb-1">山田 太郎 さん</div>
             <div class="text-sm text-green-700 mb-2">東京・練馬区の畑</div>
-            <div class="text-green-900">
+            <div class="text-green-900 text-sm md:text-base">
               家族で始めた畑仕事がきっかけで、今では近所の子どもたちも手伝いに来てくれます。小松菜は有機肥料だけで優しく育てました。安心してお召し上がりください。
             </div>
           </div>
         </div>
-        <div class="story-card flex items-center gap-6">
-          <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=96&q=80"
-            alt="佐藤さんプロフィール" class="w-24 h-24 object-cover rounded-full border-4 border-green-200">
+        <div class="story-card flex flex-col md:flex-row items-center gap-4 md:gap-6">
+          <img src="https://images.unsplash.com/photo-1580332449307-c0d63af9d7b7?auto=format&fit=crop&w=128&q=80"
+            alt="佐藤さんプロフィール" class="w-20 h-20 md:w-24 md:h-24 object-cover rounded-full border-4 border-green-200">
           <div>
             <div class="font-semibold text-green-800 text-lg mb-1">佐藤 花子 さん</div>
             <div class="text-sm text-green-700 mb-2">埼玉・草加シェア畑</div>
-            <div class="text-green-900">
+            <div class="text-green-900 text-sm md:text-base">
               会社員の傍ら、週末農家として野菜づくりに挑戦中。ミニトマトは水やりと日当たりにこだわり、本来の甘みを引き出しました。「誰かの食卓に届きますように」と願っています。
             </div>
           </div>
@@ -236,17 +460,17 @@
     </section>
 
     <!-- About/Hero Statement -->
-    <section class="mt-12 px-6">
-      <div class="bg-white bg-opacity-80 rounded-2xl p-8 shadow-sm flex items-center gap-8">
+    <section class="mt-8 sm:mt-12 px-2 sm:px-6">
+      <div class="bg-white bg-opacity-80 rounded-2xl p-4 sm:p-8 shadow-sm flex flex-col md:flex-row items-center gap-4 sm:gap-8 about-section">
         <div class="flex-shrink-0 text-center">
-          <i class="fas fa-tractor text-4xl text-green-600 mb-3"></i>
+          <i class="fas fa-tractor text-3xl sm:text-4xl text-green-600 mb-2 sm:mb-3"></i>
         </div>
         <div>
-          <h2 class="text-xl font-bold text-green-800 mb-2">Harvest Marketが目指すこと</h2>
-          <p class="text-green-900">
-            シェア畑で得た「農を楽しむ体験」に、<span class="font-bold bg-green-100 px-1 rounded">次のステージ</span>。<br>
-            自分の手で丁寧に育てた野菜や果物が、<b>誰かの「美味しい」に繋がる</b>。<br>
-            生産者の顔が見える安心感と、<b>育てた物語</b>も一緒にお届けします。<br>
+          <h2 class="text-lg sm:text-xl font-bold text-green-800 mb-2">Harvest Marketが目指すこと</h2>
+          <p class="text-sm sm:text-base text-green-900">
+            シェア畑で得た「農を楽しむ体験」に、<span class="font-bold bg-green-100 px-1 rounded">次のステージ</span>。<br class="hidden sm:block">
+            自分の手で丁寧に育てた野菜や果物が、<b>誰かの「美味しい」に繋がる</b>。<br class="hidden sm:block">
+            生産者の顔が見える安心感と、<b>育てた物語</b>も一緒にお届けします。<br class="hidden sm:block">
             <span class="inline-block mt-2 px-2 py-1 bg-green-50 text-green-800 rounded">都市生活者の新しいライフスタイル、はじまる。</span>
           </p>
         </div>
@@ -254,9 +478,47 @@
     </section>
 
     <!-- Footer -->
-    <footer class="text-center text-green-800 text-xs py-8 mt-10 opacity-70">
-      &copy; 2024 Harvest Market. シェア畑の体験を、あなたの暮らしへ。
+    <footer class="text-center text-green-800 text-xs py-6 sm:py-8 mt-8 sm:mt-10 opacity-70">
+      &copy; 2025 Harvest Market. シェア畑の体験を、あなたの暮らしへ。
     </footer>
   </main>
+
+  <script>
+    // モバイルメニューの動作制御
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuButton = document.getElementById('menuButton');
+      const mobileMenu = document.getElementById('mobileMenu');
+      
+      menuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('active');
+        
+        // ハンバーガーメニューのアニメーション
+        const spans = menuButton.querySelectorAll('span');
+        if (mobileMenu.classList.contains('active')) {
+          spans[0].style.transform = 'rotate(45deg) translate(5px, 6px)';
+          spans[1].style.opacity = '0';
+          spans[2].style.transform = 'rotate(-45deg) translate(5px, -6px)';
+          document.body.style.overflow = 'hidden'; // スクロール防止
+        } else {
+          spans[0].style.transform = 'none';
+          spans[1].style.opacity = '1';
+          spans[2].style.transform = 'none';
+          document.body.style.overflow = ''; // スクロール許可
+        }
+      });
+      
+      // 画面サイズ変更時の処理
+      window.addEventListener('resize', function() {
+        if (window.innerWidth > 768 && mobileMenu.classList.contains('active')) {
+          mobileMenu.classList.remove('active');
+          const spans = menuButton.querySelectorAll('span');
+          spans[0].style.transform = 'none';
+          spans[1].style.opacity = '1';
+          spans[2].style.transform = 'none';
+          document.body.style.overflow = '';
+        }
+      });
+    });
+  </script>
 </body>
 </html>
