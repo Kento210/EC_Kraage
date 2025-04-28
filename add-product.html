@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>野菜を出品する - Harvest Market</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="シェア畑の利用者が育てた作物を販売できる日本語UIのオンラインECプラットフォーム『Harvest Market』の出品ページ。">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* カラーパレット変数 */
+    :root {
+      --color-bg-main: #f8f5ee;
+      --color-text-main: #35432b;
+      --color-text-dark: #355b30;
+      --color-text-title: #4f694e;
+      --color-accent: #45653e;
+      --color-card-category: #f5f2e4;
+      --color-card-product: #fffdfa;
+      --color-card-story: #f1f8f3;
+      --shadow-sm: 0 2px 8px 0 rgba(155,168,104,0.05);
+      --shadow-md: 0 3px 12px 0 rgba(120,130,80,0.08);
+      --shadow-lg: 0 6px 16px 0 rgba(102,128,95,0.12);
+      --radius-sm: 1rem;
+      --radius-md: 1.35rem;
+      --radius-lg: 1.75rem;
+      --transition-fast: 0.15s ease;
+      --transition-hover: 0.2s ease;
+    }
+    
+    html { background: var(--color-bg-main); }
+    
+    body {
+      font-family: 'Noto Sans JP', 'Quicksand', sans-serif;
+      background: var(--color-bg-main);
+      color: var(--color-text-main);
+      font-size: 1.05rem;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    
+    .main-bg {
+      background: linear-gradient(135deg, #e4ede1 40%, #f3eada 100%);
+    }
+    
+    .logo-text {
+      font-family: 'Quicksand', 'Noto Sans JP',sans-serif;
+      font-weight: 700;
+      font-size: 2.15rem;
+      letter-spacing: .05em;
+      color: var(--color-accent);
+      text-shadow: 0 1px 0 #f2fff4;
+    }
+    
+    .section-title {
+      font-weight: 700;
+      font-size: 1.22rem;
+      color: var(--color-text-title);
+      margin-bottom: 1.1rem;
+      letter-spacing: .02em;
+    }
+    
+    /* モバイルメニュー */
+    .mobile-menu {
+      display: none;
+    }
+    
+    .hamburger-btn {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 21px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      z-index: 40;
+    }
+    
+    .hamburger-btn span {
+      width: 100%;
+      height: 3px;
+      background-color: var(--color-text-dark);
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+    
+    /* 商品画像選択スタイル */
+    .product-image-selector {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    
+    .product-image-item {
+      border: 2px solid transparent;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .product-image-item.selected {
+      border-color: #45653e;
+      box-shadow: 0 0 0 2px rgba(69, 101, 62, 0.4);
+      transform: scale(1.02);
+    }
+    
+    /* 価格設定スライダー */
+    .price-slider-container {
+      width: 100%;
+      padding: 10px 0;
+    }
+    
+    .price-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 10px;
+      border-radius: 5px;
+      background: #e0e7df;
+      outline: none;
+    }
+    
+    .price-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #45653e;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .price-slider::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #45653e;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* レスポンシブデザイン */
+    @media (max-width: 1024px) {
+      .main-bg {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      
+      header {
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        font-size: 1rem;
+      }
+      
+      .logo-text {
+        font-size: 1.7rem;
+      }
+      
+      .desktop-menu {
+        display: none;
+      }
+      
+      .hamburger-btn {
+        display: flex;
+      }
+      
+      .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--color-bg-main);
+        z-index: 35;
+        padding: 5rem 2rem 2rem;
+        flex-direction: column;
+      }
+      
+      .mobile-menu.active {
+        display: flex;
+      }
+      
+      .mobile-menu ul {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      
+      .mobile-menu a {
+        display: block;
+        font-size: 1.25rem;
+        padding: 0.5rem 0;
+      }
+      
+      .section-title {
+        font-size: 1.15rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .main-bg {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="bg-white bg-opacity-80 border-b border-green-100 py-4 px-10 flex items-center justify-between" style="position:sticky;top:0;z-index:30;">
+    <div class="flex flex-col">
+      <span class="logo-text flex items-center">
+        <i class="fas fa-seedling mr-2 text-green-700"></i>
+        Harvest Market
+      </span>
+      <div class="text-xs text-green-600 font-medium">Produced by AgriMedia</div>
+    </div>
+    <nav class="desktop-menu">
+      <ul class="flex gap-8 items-center text-green-900 font-semibold text-lg">
+        <li>
+          <a href="index.html" class="hover:underline">
+            <i class="fas fa-home mr-1"></i>トップ
+          </a>
+        </li>
+        <li>
+          <a href="#" class="hover:underline">
+            <i class="fas fa-search mr-1"></i>商品を探す
+          </a>
+        </li>
+        <li>
+          <a href="add-product.html" class="hover:underline border-b-2 border-green-700">
+            <i class="fas fa-plus-square mr-1"></i>出品する
+          </a>
+        </li>
+        <li>
+          <a href="my-page.html" class="hover:underline">
+            <i class="fas fa-user-circle mr-1"></i>マイページ
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <button class="hamburger-btn" aria-label="メニュー" id="menuButton">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="mobile-menu" id="mobileMenu">
+      <ul class="text-green-900 font-semibold">
+        <li>
+          <a href="index.html" class="hover:bg-green-50 rounded-md px-3">
+            <i class="fas fa-home mr-2"></i>トップ
+          </a>
+        </li>
+        <li>
+          <a href="#" class="hover:bg-green-50 rounded-md px-3">
+            <i class="fas fa-search mr-2"></i>商品を探す
+          </a>
+        </li>
+        <li>
+          <a href="add-product.html" class="hover:bg-green-50 rounded-md px-3 bg-green-50">
+            <i class="fas fa-plus-square mr-2"></i>出品する
+          </a>
+        </li>
+        <li>
+          <a href="my-page.html" class="hover:bg-green-50 rounded-md px-3">
+            <i class="fas fa-user-circle mr-2"></i>マイページ
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="main-bg px-4 sm:px-8 py-6 sm:py-8" style="max-width:850px;margin:0 auto;">
+    <div class="bg-white rounded-xl p-6 sm:p-8 shadow-md">
+      <h1 class="text-2xl font-bold text-green-800 mb-6 flex items-center">
+        <i class="fas fa-plus-square mr-2 text-green-700"></i>
+        野菜を出品する
+      </h1>
+      
+      <form id="productForm" class="space-y-6">
+        <!-- 商品名入力 -->
+        <div>
+          <label for="productName" class="block text-sm font-medium text-green-800 mb-2">商品名</label>
+          <input type="text" id="productName" name="productName" class="w-full px-3 py-2 border border-green-200 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent" placeholder="例：新鮮な小松菜" required>
+        </div>
+        
+        <!-- 画像選択 -->
+        <div>
+          <label class="block text-sm font-medium text-green-800 mb-3">商品画像を選択</label>
+          <div class="product-image-selector mb-2" id="imageSelector">
+            <div class="product-image-item" data-image="komatuna.png">
+              <img src="./public/komatuna.png" alt="小松菜" class="w-full h-32 object-cover">
+              <p class="text-center text-sm mt-1">小松菜</p>
+            </div>
+            <div class="product-image-item" data-image="tomato.png">
+              <img src="./public/tomato.png" alt="トマト" class="w-full h-32 object-cover">
+              <p class="text-center text-sm mt-1">ミニトマト</p>
+            </div>
+            <div class="product-image-item" data-image="ningin.jpg">
+              <img src="./public/ningin.jpg" alt="人参" class="w-full h-32 object-cover">
+              <p class="text-center text-sm mt-1">人参</p>
+            </div>
+          </div>
+          <input type="hidden" id="selectedImage" name="selectedImage" required>
+          <p class="text-sm text-green-600 italic">※ 写真をクリックして選択してください</p>
+        </div>
+        
+        <!-- 価格設定 -->
+        <div>
+          <label for="price" class="block text-sm font-medium text-green-800 mb-2">価格設定 (円)</label>
+          <div class="price-slider-container">
+            <input type="range" id="priceSlider" class="price-slider" min="300" max="2000" step="50" value="800">
+          </div>
+          <div class="flex justify-between mt-2">
+            <div>
+              <span class="text-sm text-green-700">設定価格: </span>
+              <span id="priceDisplay" class="font-bold text-green-900">¥800</span>
+            </div>
+            <div>
+              <span class="text-sm text-green-700">市場相場: </span>
+              <span id="marketPriceDisplay" class="text-green-900">¥600〜¥1,000</span>
+            </div>
+          </div>
+          <input type="hidden" id="priceInput" name="price" value="800">
+        </div>
+        
+        <!-- 商品説明 -->
+        <div>
+          <label for="description" class="block text-sm font-medium text-green-800 mb-2">商品説明</label>
+          <textarea id="description" name="description" rows="4" class="w-full px-3 py-2 border border-green-200 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent" placeholder="栽培方法や収穫日、おすすめの食べ方などを記入してください" required></textarea>
+        </div>
+        
+        <!-- 商品数量 -->
+        <div>
+          <label for="quantity" class="block text-sm font-medium text-green-800 mb-2">出品数量</label>
+          <div class="flex items-center">
+            <button type="button" id="decreaseQty" class="bg-green-100 text-green-800 px-3 py-1 rounded-l-md hover:bg-green-200">−</button>
+            <input type="number" id="quantity" name="quantity" min="1" value="1" class="w-16 text-center border-t border-b border-green-200 py-1 focus:outline-none" readonly>
+            <button type="button" id="increaseQty" class="bg-green-100 text-green-800 px-3 py-1 rounded-r-md hover:bg-green-200">＋</button>
+            <span class="ml-2 text-green-800">セット</span>
+          </div>
+        </div>
+        
+        <!-- 栽培方法 -->
+        <div>
+          <label class="block text-sm font-medium text-green-800 mb-2">栽培方法</label>
+          <div class="flex gap-4">
+            <label class="flex items-center">
+              <input type="radio" name="growingMethod" value="organic" class="mr-2" checked>
+              <span>オーガニック</span>
+            </label>
+            <label class="flex items-center">
+              <input type="radio" name="growingMethod" value="conventional" class="mr-2">
+              <span>慣行農法</span>
+            </label>
+          </div>
+        </div>
+        
+        <!-- 提出ボタン -->
+        <div class="pt-4">
+          <button type="submit" class="w-full bg-green-700 hover:bg-green-800 text-white py-3 rounded-md font-bold transition duration-200 flex items-center justify-center">
+            <i class="fas fa-plus-circle mr-2"></i>
+            出品する
+          </button>
+        </div>
+      </form>
+    </div>
+    
+    <div class="mt-8 text-center">
+      <a href="index.html" class="text-green-700 hover:text-green-800 font-medium">
+        <i class="fas fa-arrow-left mr-1"></i> トップページに戻る
+      </a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center text-green-800 text-xs py-6 sm:py-8 mt-8 sm:mt-10 opacity-70">
+    &copy; 2025 Harvest Market. シェア畑の体験を、あなたの暮らしへ。
+  </footer>
+
+  <script>
+    // モバイルメニューの動作制御
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuButton = document.getElementById('menuButton');
+      const mobileMenu = document.getElementById('mobileMenu');
+      
+      menuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('active');
+        
+        // ハンバーガーメニューのアニメーション
+        const spans = menuButton.querySelectorAll('span');
+        if (mobileMenu.classList.contains('active')) {
+          spans[0].style.transform = 'rotate(45deg) translate(5px, 6px)';
+          spans[1].style.opacity = '0';
+          spans[2].style.transform = 'rotate(-45deg) translate(5px, -6px)';
+          document.body.style.overflow = 'hidden'; // スクロール防止
+        } else {
+          spans[0].style.transform = 'none';
+          spans[1].style.opacity = '1';
+          spans[2].style.transform = 'none';
+          document.body.style.overflow = ''; // スクロール許可
+        }
+      });
+      
+      // 商品画像選択機能
+      const imageItems = document.querySelectorAll('.product-image-item');
+      const selectedImageInput = document.getElementById('selectedImage');
+      const marketPriceDisplay = document.getElementById('marketPriceDisplay');
+      
+      // 市場相場情報
+      const marketPrices = {
+        'komatuna.png': '¥500〜¥900',
+        'tomato.png': '¥600〜¥1,000',
+        'ningin.jpg': '¥400〜¥800'
+      };
+      
+      imageItems.forEach(item => {
+        item.addEventListener('click', function() {
+          // 以前の選択を解除
+          document.querySelectorAll('.product-image-item').forEach(el => {
+            el.classList.remove('selected');
+          });
+          
+          // 新しい選択を適用
+          this.classList.add('selected');
+          const selectedImage = this.dataset.image;
+          selectedImageInput.value = selectedImage;
+          
+          // 市場相場表示を更新
+          marketPriceDisplay.textContent = marketPrices[selectedImage] || '¥500〜¥900';
+        });
+      });
+      
+      // 価格スライダー制御
+      const priceSlider = document.getElementById('priceSlider');
+      const priceDisplay = document.getElementById('priceDisplay');
+      const priceInput = document.getElementById('priceInput');
+      
+      priceSlider.addEventListener('input', function() {
+        const value = this.value;
+        priceDisplay.textContent = `¥${value}`;
+        priceInput.value = value;
+      });
+      
+      // 数量コントロール
+      const decreaseBtn = document.getElementById('decreaseQty');
+      const increaseBtn = document.getElementById('increaseQty');
+      const quantityInput = document.getElementById('quantity');
+      
+      decreaseBtn.addEventListener('click', function() {
+        const currentValue = parseInt(quantityInput.value);
+        if (currentValue > 1) {
+          quantityInput.value = currentValue - 1;
+        }
+      });
+      
+      increaseBtn.addEventListener('click', function() {
+        const currentValue = parseInt(quantityInput.value);
+        quantityInput.value = currentValue + 1;
+      });
+      
+      // フォーム送信処理
+      const productForm = document.getElementById('productForm');
+      
+      productForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // フォームデータの取得
+        const formData = new FormData(this);
+        const productData = {
+          id: new Date().getTime(), // ユニークIDとして現在時刻を使用
+          name: formData.get('productName'),
+          image: formData.get('selectedImage'),
+          price: formData.get('price'),
+          description: formData.get('description'),
+          quantity: formData.get('quantity'),
+          growingMethod: formData.get('growingMethod'),
+          date: new Date().toISOString().split('T')[0] // YYYY-MM-DD形式
+        };
+        
+        // 既存の出品データがあれば取得、なければ空の配列を作成
+        let products = JSON.parse(localStorage.getItem('myProducts')) || [];
+        
+        // 新しい商品データを追加
+        products.push(productData);
+        
+        // ローカルストレージに保存
+        localStorage.setItem('myProducts', JSON.stringify(products));
+        
+        // 完了メッセージ
+        alert('出品が完了しました！マイページで確認できます。');
+        
+        // マイページにリダイレクト
+        window.location.href = 'my-page.html';
+      });
+    });
+  </script>
+</body>
+</html>

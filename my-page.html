@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>マイページ - Harvest Market</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="シェア畑の利用者が育てた作物を管理できるHarvest Marketのマイページ。">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* カラーパレット変数 */
+    :root {
+      --color-bg-main: #f8f5ee;
+      --color-text-main: #35432b;
+      --color-text-dark: #355b30;
+      --color-text-title: #4f694e;
+      --color-accent: #45653e;
+      --color-card-category: #f5f2e4;
+      --color-card-product: #fffdfa;
+      --color-card-story: #f1f8f3;
+      --shadow-sm: 0 2px 8px 0 rgba(155,168,104,0.05);
+      --shadow-md: 0 3px 12px 0 rgba(120,130,80,0.08);
+      --shadow-lg: 0 6px 16px 0 rgba(102,128,95,0.12);
+      --radius-sm: 1rem;
+      --radius-md: 1.35rem;
+      --radius-lg: 1.75rem;
+      --transition-fast: 0.15s ease;
+      --transition-hover: 0.2s ease;
+    }
+    
+    html { background: var(--color-bg-main); }
+    
+    body {
+      font-family: 'Noto Sans JP', 'Quicksand', sans-serif;
+      background: var(--color-bg-main);
+      color: var(--color-text-main);
+      font-size: 1.05rem;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    
+    .main-bg {
+      background: linear-gradient(135deg, #e4ede1 40%, #f3eada 100%);
+    }
+    
+    .logo-text {
+      font-family: 'Quicksand', 'Noto Sans JP',sans-serif;
+      font-weight: 700;
+      font-size: 2.15rem;
+      letter-spacing: .05em;
+      color: var(--color-accent);
+      text-shadow: 0 1px 0 #f2fff4;
+    }
+    
+    .section-title {
+      font-weight: 700;
+      font-size: 1.22rem;
+      color: var(--color-text-title);
+      margin-bottom: 1.1rem;
+      letter-spacing: .02em;
+    }
+    
+    /* モバイルメニュー */
+    .mobile-menu {
+      display: none;
+    }
+    
+    .hamburger-btn {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 21px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      z-index: 40;
+    }
+    
+    .hamburger-btn span {
+      width: 100%;
+      height: 3px;
+      background-color: var(--color-text-dark);
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+    
+    /* 商品カードスタイル */
+    .my-product-card {
+      background-color: #ffffff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+    }
+    
+    .my-product-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    
+    /* タブスタイル */
+    .tab-button {
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      border-radius: 0.5rem 0.5rem 0 0;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .tab-button.active {
+      background-color: white;
+      color: var(--color-text-dark);
+      box-shadow: 0 -2px 6px rgba(155,168,104,0.12);
+    }
+    
+    .tab-content {
+      display: none;
+      padding: 1.5rem;
+      background-color: white;
+      border-radius: 0 0.5rem 0.5rem 0.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* プログレスバースタイル */
+    .progress-container {
+      width: 100%;
+      height: 10px;
+      background-color: #e0e7df;
+      border-radius: 5px;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background-color: #45653e;
+      border-radius: 5px;
+    }
+    
+    /* レスポンシブデザイン */
+    @media (max-width: 1024px) {
+      .main-bg {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      
+      header {
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        font-size: 1rem;
+      }
+      
+      .logo-text {
+        font-size: 1.7rem;
+      }
+      
+      .desktop-menu {
+        display: none;
+      }
+      
+      .hamburger-btn {
+        display: flex;
+      }
+      
+      .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--color-bg-main);
+        z-index: 35;
+        padding: 5rem 2rem 2rem;
+        flex-direction: column;
+      }
+      
+      .mobile-menu.active {
+        display: flex;
+      }
+      
+      .mobile-menu ul {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      
+      .mobile-menu a {
+        display: block;
+        font-size: 1.25rem;
+        padding: 0.5rem 0;
+      }
+      
+      .section-title {
+        font-size: 1.15rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .main-bg {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+      }
+      
+      .tab-button {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="bg-white bg-opacity-80 border-b border-green-100 py-4 px-10 flex items-center justify-between" style="position:sticky;top:0;z-index:30;">
+    <div class="flex flex-col">
+      <span class="logo-text flex items-center">
+        <i class="fas fa-seedling mr-2 text-green-700"></i>
+        Harvest Market
+      </span>
+      <div class="text-xs text-green-600 font-medium">Produced by AgriMedia</div>
+    </div>
+    <nav class="desktop-menu">
+      <ul class="flex gap-8 items-center text-green-900 font-semibold text-lg">
+        <li>
+          <a href="index.html" class="hover:underline">
+            <i class="fas fa-home mr-1"></i>トップ
+          </a>
+        </li>
+        <li>
+          <a href="#" class="hover:underline">
+            <i class="fas fa-search mr-1"></i>商品を探す
+          </a>
+        </li>
+        <li>
+          <a href="add-product.html" class="hover:underline">
+            <i class="fas fa-plus-square mr-1"></i>出品する
+          </a>
+        </li>
+        <li>
+          <a href="my-page.html" class="hover:underline border-b-2 border-green-700">
+            <i class="fas fa-user-circle mr-1"></i>マイページ
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <button class="hamburger-btn" aria-label="メニュー" id="menuButton">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="mobile-menu" id="mobileMenu">
+      <ul class="text-green-900 font-semibold">
+        <li>
+          <a href="index.html" class="hover:bg-green-50 rounded-md px-3">
+            <i class="fas fa-home mr-2"></i>トップ
+          </a>
+        </li>
+        <li>
+          <a href="#" class="hover:bg-green-50 rounded-md px-3">
+            <i class="fas fa-search mr-2"></i>商品を探す
+          </a>
+        </li>
+        <li>
+          <a href="add-product.html" class="hover:bg-green-50 rounded-md px-3">
+            <i class="fas fa-plus-square mr-2"></i>出品する
+          </a>
+        </li>
+        <li>
+          <a href="my-page.html" class="hover:bg-green-50 rounded-md px-3 bg-green-50">
+            <i class="fas fa-user-circle mr-2"></i>マイページ
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="main-bg px-4 sm:px-8 py-6 sm:py-8" style="max-width:950px;margin:0 auto;">
+    <!-- ユーザープロファイル -->
+    <section class="bg-white rounded-xl p-6 mb-8 shadow-sm">
+      <div class="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
+        <div class="flex-shrink-0">
+          <div class="w-24 h-24 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-3xl border-4 border-green-200">
+            <i class="fas fa-user"></i>
+          </div>
+        </div>
+        <div class="flex-grow text-center sm:text-left">
+          <h1 class="text-2xl font-bold text-green-900 mb-2">山田 太郎</h1>
+          <p class="text-green-700 mb-3">東京・練馬区のシェア畑で栽培中</p>
+          <div class="flex flex-wrap gap-2 justify-center sm:justify-start mb-3">
+            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">有機栽培</span>
+            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">小松菜</span>
+            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">トマト</span>
+          </div>
+          <div class="flex flex-wrap gap-4 justify-center sm:justify-start text-sm text-green-800">
+            <div>
+              <i class="fas fa-seedling mr-1"></i> 栽培中: <span class="font-bold">2</span>
+            </div>
+            <div>
+              <i class="fas fa-store mr-1"></i> 出品中: <span id="listingCount" class="font-bold">0</span>
+            </div>
+            <div>
+              <i class="fas fa-shopping-bag mr-1"></i> 販売済: <span class="font-bold">5</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex-shrink-0">
+          <a href="add-product.html" class="inline-flex items-center bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-md transition duration-200">
+            <i class="fas fa-plus mr-2"></i>
+            新規出品
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- タブナビゲーション -->
+    <div class="flex mb-0">
+      <div id="tab-listing" class="tab-button active bg-white text-green-800">
+        出品管理
+      </div>
+      <div id="tab-harvest" class="tab-button bg-green-100 text-green-700">
+        栽培管理
+      </div>
+      <div id="tab-sales" class="tab-button bg-green-100 text-green-700">
+        販売履歴
+      </div>
+    </div>
+
+    <!-- タブコンテンツ -->
+    <section class="mb-8">
+      <!-- 出品管理タブ -->
+      <div id="content-listing" class="tab-content active">
+        <div id="no-products-message" class="text-center py-10">
+          <i class="fas fa-leaf text-green-300 text-5xl mb-3"></i>
+          <p class="text-green-700 mb-4">まだ出品している商品がありません</p>
+          <a href="add-product.html" class="inline-flex items-center bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-md transition duration-200">
+            <i class="fas fa-plus mr-2"></i>
+            野菜を出品する
+          </a>
+        </div>
+        
+        <div id="products-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- 商品カード（JavaScript で動的に生成）-->
+        </div>
+      </div>
+      
+      <!-- 栽培管理タブ -->
+      <div id="content-harvest" class="tab-content">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- 栽培中の小松菜 -->
+          <div class="my-product-card">
+            <div class="relative">
+              <img src="./public/komatuna.png" alt="栽培中の小松菜" class="w-full h-40 object-cover">
+              <div class="absolute top-2 right-2 bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">
+                栽培中
+              </div>
+            </div>
+            <div class="p-4">
+              <h3 class="font-bold text-green-900 text-lg mb-1">小松菜</h3>
+              <p class="text-sm text-green-700 mb-3">種まき: 2025年3月15日</p>
+              
+              <div class="mb-3">
+                <div class="flex justify-between text-sm mb-1">
+                  <span>栽培進捗</span>
+                  <span>75%</span>
+                </div>
+                <div class="progress-container">
+                  <div class="progress-bar" style="width: 75%"></div>
+                </div>
+              </div>
+              
+              <div class="text-sm text-green-800 mb-3">
+                <p>収穫予定日: 2025年5月10日</p>
+              </div>
+              
+              <button class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-md transition duration-200">
+                <i class="fas fa-plus-square mr-1"></i> 出品する
+              </button>
+            </div>
+          </div>
+          
+          <!-- 栽培中のミニトマト -->
+          <div class="my-product-card">
+            <div class="relative">
+              <img src="./public/tomato.png" alt="栽培中のミニトマト" class="w-full h-40 object-cover">
+              <div class="absolute top-2 right-2 bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">
+                栽培中
+              </div>
+            </div>
+            <div class="p-4">
+              <h3 class="font-bold text-green-900 text-lg mb-1">ミニトマト</h3>
+              <p class="text-sm text-green-700 mb-3">種まき: 2025年3月1日</p>
+              
+              <div class="mb-3">
+                <div class="flex justify-between text-sm mb-1">
+                  <span>栽培進捗</span>
+                  <span>60%</span>
+                </div>
+                <div class="progress-container">
+                  <div class="progress-bar" style="width: 60%"></div>
+                </div>
+              </div>
+              
+              <div class="text-sm text-green-800 mb-3">
+                <p>収穫予定日: 2025年6月5日</p>
+              </div>
+              
+              <button class="w-full bg-gray-400 text-white py-2 rounded-md cursor-not-allowed">
+                <i class="fas fa-hourglass-half mr-1"></i> 収穫までお待ちください
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 販売履歴タブ -->
+      <div id="content-sales" class="tab-content">
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr class="bg-green-50">
+                <th class="p-3 text-left text-green-800">商品名</th>
+                <th class="p-3 text-left text-green-800">価格</th>
+                <th class="p-3 text-left text-green-800">販売日</th>
+                <th class="p-3 text-left text-green-800">購入者</th>
+                <th class="p-3 text-left text-green-800">状態</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-green-100">
+                <td class="p-3">
+                  <div class="flex items-center">
+                    <img src="./public/komatuna.png" alt="小松菜" class="w-10 h-10 rounded-md object-cover mr-2">
+                    <span>採れたて小松菜</span>
+                  </div>
+                </td>
+                <td class="p-3">¥800</td>
+                <td class="p-3">2025年4月10日</td>
+                <td class="p-3">佐藤 花子</td>
+                <td class="p-3">
+                  <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">配送完了</span>
+                </td>
+              </tr>
+              <tr class="border-b border-green-100">
+                <td class="p-3">
+                  <div class="flex items-center">
+                    <img src="./public/ningin.jpg" alt="人参" class="w-10 h-10 rounded-md object-cover mr-2">
+                    <span>オーガニック人参</span>
+                  </div>
+                </td>
+                <td class="p-3">¥650</td>
+                <td class="p-3">2025年4月5日</td>
+                <td class="p-3">鈴木 一郎</td>
+                <td class="p-3">
+                  <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">配送完了</span>
+                </td>
+              </tr>
+              <tr class="border-b border-green-100">
+                <td class="p-3">
+                  <div class="flex items-center">
+                    <img src="./public/tomato.png" alt="トマト" class="w-10 h-10 rounded-md object-cover mr-2">
+                    <span>フレッシュミニトマト</span>
+                  </div>
+                </td>
+                <td class="p-3">¥900</td>
+                <td class="p-3">2025年3月28日</td>
+                <td class="p-3">高橋 健太</td>
+                <td class="p-3">
+                  <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">評価待ち</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    
+    <div class="mt-8 text-center">
+      <a href="index.html" class="text-green-700 hover:text-green-800 font-medium">
+        <i class="fas fa-arrow-left mr-1"></i> トップページに戻る
+      </a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center text-green-800 text-xs py-6 sm:py-8 mt-8 sm:mt-10 opacity-70">
+    &copy; 2025 Harvest Market. シェア畑の体験を、あなたの暮らしへ。
+  </footer>
+
+  <script>
+    // モバイルメニューの動作制御
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuButton = document.getElementById('menuButton');
+      const mobileMenu = document.getElementById('mobileMenu');
+      
+      menuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('active');
+        
+        // ハンバーガーメニューのアニメーション
+        const spans = menuButton.querySelectorAll('span');
+        if (mobileMenu.classList.contains('active')) {
+          spans[0].style.transform = 'rotate(45deg) translate(5px, 6px)';
+          spans[1].style.opacity = '0';
+          spans[2].style.transform = 'rotate(-45deg) translate(5px, -6px)';
+          document.body.style.overflow = 'hidden'; // スクロール防止
+        } else {
+          spans[0].style.transform = 'none';
+          spans[1].style.opacity = '1';
+          spans[2].style.transform = 'none';
+          document.body.style.overflow = ''; // スクロール許可
+        }
+      });
+      
+      // タブ切り替え
+      const tabs = ['listing', 'harvest', 'sales'];
+      
+      tabs.forEach(tab => {
+        const tabButton = document.getElementById(`tab-${tab}`);
+        const tabContent = document.getElementById(`content-${tab}`);
+        
+        tabButton.addEventListener('click', () => {
+          // 全てのタブボタンから active クラスを削除
+          tabs.forEach(t => {
+            document.getElementById(`tab-${t}`).classList.remove('active');
+            document.getElementById(`tab-${t}`).classList.add('bg-green-100');
+          });
+          
+          // 選択したタブボタンに active クラスを付与
+          tabButton.classList.add('active');
+          tabButton.classList.remove('bg-green-100');
+          
+          // 全てのタブコンテンツから active クラスを削除
+          tabs.forEach(t => {
+            document.getElementById(`content-${t}`).classList.remove('active');
+          });
+          
+          // 選択したタブのコンテンツに active クラスを付与
+          tabContent.classList.add('active');
+        });
+      });
+      
+      // ローカルストレージから出品商品データを取得
+      const loadProducts = function() {
+        const productsContainer = document.getElementById('products-container');
+        const noProductsMessage = document.getElementById('no-products-message');
+        const listingCountElement = document.getElementById('listingCount');
+        
+        // ローカルストレージからデータを取得
+        const products = JSON.parse(localStorage.getItem('myProducts')) || [];
+        
+        // 出品数を更新
+        listingCountElement.textContent = products.length;
+        
+        if (products.length === 0) {
+          // 出品がない場合はメッセージを表示
+          noProductsMessage.style.display = 'block';
+          productsContainer.style.display = 'none';
+        } else {
+          // 出品がある場合は商品を表示
+          noProductsMessage.style.display = 'none';
+          productsContainer.style.display = 'grid';
+          
+          // コンテナを空にする
+          productsContainer.innerHTML = '';
+          
+          // 各商品のカードを生成
+          products.forEach(product => {
+            const card = document.createElement('div');
+            card.className = 'my-product-card';
+            card.innerHTML = `
+              <div class="relative">
+                <img src="./public/${product.image}" alt="${product.name}" class="w-full h-40 object-cover">
+                <div class="absolute top-2 right-2 bg-green-600 text-white px-2 py-1 rounded-full text-xs">
+                  ¥${product.price}
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-green-900 text-lg mb-1">${product.name}</h3>
+                <p class="text-sm text-green-700 mb-3">出品日: ${product.date}</p>
+                
+                <div class="text-sm text-gray-600 mb-4 h-20 overflow-hidden">
+                  ${product.description}
+                </div>
+                
+                <div class="flex justify-between items-center mb-3">
+                  <span class="text-green-800">
+                    <i class="fas fa-box-open mr-1"></i> ${product.quantity}セット
+                  </span>
+                  <span class="${product.growingMethod === 'organic' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'} px-2 py-1 rounded-full text-xs">
+                    ${product.growingMethod === 'organic' ? 'オーガニック' : '慣行農法'}
+                  </span>
+                </div>
+                
+                <div class="flex gap-2">
+                  <button class="flex-1 bg-red-50 hover:bg-red-100 text-red-600 py-2 rounded-md transition duration-200" 
+                          onclick="deleteProduct(${product.id})">
+                    <i class="fas fa-trash-alt mr-1"></i> 削除
+                  </button>
+                  <button class="flex-1 bg-green-50 hover:bg-green-100 text-green-700 py-2 rounded-md transition duration-200" 
+                          onclick="editProduct(${product.id})">
+                    <i class="fas fa-edit mr-1"></i> 編集
+                  </button>
+                </div>
+              </div>
+            `;
+            productsContainer.appendChild(card);
+          });
+        }
+      };
+      
+      // 商品削除機能
+      window.deleteProduct = function(productId) {
+        if (confirm('この商品を削除してもよろしいですか？')) {
+          // ローカルストレージから商品を取得
+          let products = JSON.parse(localStorage.getItem('myProducts')) || [];
+          
+          // 指定されたIDの商品を除外
+          products = products.filter(product => product.id !== productId);
+          
+          // 更新したデータをローカルストレージに保存
+          localStorage.setItem('myProducts', JSON.stringify(products));
+          
+          // 商品リストを再読み込み
+          loadProducts();
+        }
+      };
+      
+      // 商品編集機能（仮の実装、実際には編集ページに遷移する）
+      window.editProduct = function(productId) {
+        alert(`商品ID: ${productId} の編集機能は現在開発中です。`);
+      };
+      
+      // 初期化時に商品を読み込む
+      loadProducts();
+    });
+  </script>
+</body>
+</html>
