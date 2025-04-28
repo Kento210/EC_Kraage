@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Harvest Market - あなたの育てた野菜が、誰かの暮らしを豊かに</title>
+  <meta name="viewport" content="width=1024">
+  <meta name="description" content="シェア畑の利用者が育てた作物を販売できる日本語UIのオンラインECプラットフォーム『Harvest Market』のトップページ。北欧シンプル系で温かみとナチュラル感を大切に。">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
+  <style>
+    html { background: #f8f5ee; }
+    body {
+      font-family: 'Noto Sans JP', 'Quicksand', sans-serif;
+      background: #f8f5ee;
+      color: #35432b;
+      font-size: 1.05rem;
+      margin: 0;
+    }
+    .main-bg {
+      background: linear-gradient(135deg,#e4ede1 40%,#f3eada 100%);
+    }
+    .category-card:hover, .product-card:hover {
+      box-shadow: 0 6px 16px 0 rgba(102,128,95,.08);
+      transform: translateY(-2px) scale(1.012);
+      transition: .2s;
+    }
+    .main-visual {
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+      border-radius: 1.75rem;
+      min-height: 340px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      box-shadow: 0 4px 24px 0 rgba(62,80,36,.12);
+    }
+    .main-visual::after {
+      content: "";
+      position: absolute;
+      top:0; left:0; right:0; bottom:0;
+      border-radius: 1.75rem;
+      background: linear-gradient(120deg,rgba(245,243,232,0.96) 65%,rgba(244,248,228,0.62) 100%);
+      pointer-events: none;
+    }
+    .main-visual-content {
+      position: relative;
+      z-index: 1;
+      padding-left: 4rem;
+      max-width: 45%;
+    }
+    @media (max-width: 900px) {
+      .main-visual-content { max-width: 80%; padding-left: 2rem;}
+      .main-visual { min-height: 210px;}
+    }
+    .category-card {
+      background: #f5f2e4;
+      border-radius: 1rem;
+      padding: 1.35rem 1.15rem;
+      min-width: 176px;
+      min-height: 100px;
+      box-shadow: 0 2px 9px 0 rgba(155,168,104,.03);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-weight: 600;
+      color: #355b30;
+      transition: box-shadow .15s,transform .12s;
+    }
+    .product-card {
+      background: #fffdfa;
+      border-radius: 1rem;
+      box-shadow: 0 2px 12px 0 rgba(120,130,80,.07);
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow .15s,transform .10s;
+    }
+    .story-card {
+      background: #f1f8f3;
+      border-radius: 1.35rem;
+      padding: 1.85rem;
+      box-shadow: 0 1px 7px 0 rgba(120,130,80,.05);
+      margin-top: 2rem;
+    }
+    .logo-text {
+      font-family: 'Quicksand', 'Noto Sans JP',sans-serif;
+      font-weight: 700;
+      font-size: 2.15rem;
+      letter-spacing: .05em;
+      color: #45653e;
+      text-shadow: 0 1px 0 #f2fff4;
+    }
+    .section-title {
+      font-weight: 700;
+      font-size: 1.22rem;
+      color: #4f694e;
+      margin-bottom: 1.1rem;
+      letter-spacing: .02em;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="bg-white bg-opacity-80 border-b border-green-100 py-4 px-10 flex items-center justify-between" style="position:sticky;top:0;z-index:30;">
+    <div class="flex items-center">
+      <span class="logo-text flex items-center mr-2">
+        <i class="fas fa-seedling mr-2 text-green-700"></i>
+        Harvest Market
+      </span>
+    </div>
+    <nav>
+      <ul class="flex gap-8 items-center text-green-900 font-semibold text-lg">
+        <li>
+          <a href="#" class="hover:underline">
+            <i class="fas fa-search mr-1"></i>商品を探す
+          </a>
+        </li>
+        <li>
+          <a href="#" class="hover:underline">
+            <i class="fas fa-plus-square mr-1"></i>出品する
+          </a>
+        </li>
+        <li>
+          <a href="#" class="hover:underline">
+            <i class="fas fa-user-circle mr-1"></i>マイページ
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="main-bg px-8 py-8" style="max-width:950px;margin:0 auto;">
+    <!-- Main Visual -->
+    <div class="main-visual px-8 mb-9 mt-4">
+      <div class="main-visual-content">
+        <h1 class="text-3xl font-bold text-green-900 mb-4" style="line-height:1.30">
+          あなたの育てた野菜が、<br>
+          誰かの暮らしを豊かに
+        </h1>
+        <p class="text-lg font-medium text-green-800 mb-5">
+          「育てる喜び」から<br>
+          「分かち合う歓び」へ。
+        </p>
+        <span class="inline-block bg-green-100 bg-opacity-80 text-green-700 px-4 py-1 rounded-full text-base font-semibold shadow-sm">
+          収穫体験 × ECマーケット
+        </span>
+      </div>
+    </div>
+
+    <!-- Category List Section -->
+    <section class="">
+      <div class="section-title">カテゴリーから探す</div>
+      <div class="grid grid-cols-4 gap-6 mb-12 md:grid-cols-2 sm:grid-cols-1">
+        <div class="category-card">
+          <i class="fas fa-leaf mb-2 text-2xl text-green-700"></i>
+          季節の野菜
+        </div>
+        <div class="category-card">
+          <i class="fas fa-apple-alt mb-2 text-2xl text-green-600"></i>
+          旬の果物
+        </div>
+        <div class="category-card">
+          <i class="fas fa-gift mb-2 text-2xl text-amber-700"></i>
+          ギフト向けセット
+        </div>
+        <div class="category-card">
+          <i class="fas fa-seedling mb-2 text-2xl text-green-600"></i>
+          オーガニック野菜
+        </div>
+      </div>
+    </section>
+
+    <!-- Picked Products -->
+    <section class="">
+      <div class="section-title">おすすめ収穫物</div>
+      <div class="grid grid-cols-3 gap-7 mb-10 md:grid-cols-1 sm:grid-cols-1">
+        <!-- Product 1 -->
+        <div class="product-card p-4">
+          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80"
+           alt="小松菜セット" class="rounded-lg mb-3 w-full h-40 object-cover">
+          <div>
+            <div class="font-bold text-green-900 text-lg mb-1">小松菜セット</div>
+            <div class="text-sm text-green-600 mb-1"><i class="fas fa-user mr-1 text-green-800"></i>山田さんの畑</div>
+            <div class="text-base font-semibold text-green-800">¥1,200</div>
+          </div>
+        </div>
+        <!-- Product 2 -->
+        <div class="product-card p-4">
+          <img src="https://images.unsplash.com/photo-1519864600974-8b7ad6a3b2a7?auto=format&fit=crop&w=400&q=80"
+           alt="旬のミニトマト" class="rounded-lg mb-3 w-full h-40 object-cover">
+          <div>
+            <div class="font-bold text-green-900 text-lg mb-1">旬のミニトマト</div>
+            <div class="text-sm text-green-600 mb-1"><i class="fas fa-user mr-1 text-green-800"></i>佐藤さんの菜園</div>
+            <div class="text-base font-semibold text-green-800">¥900</div>
+          </div>
+        </div>
+        <!-- Product 3 -->
+        <div class="product-card p-4">
+          <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80"
+           alt="オーガニック人参" class="rounded-lg mb-3 w-full h-40 object-cover">
+          <div>
+            <div class="font-bold text-green-900 text-lg mb-1">オーガニック人参</div>
+            <div class="text-sm text-green-600 mb-1"><i class="fas fa-user mr-1 text-green-800"></i>高橋さんのファーム</div>
+            <div class="text-base font-semibold text-green-800">¥750</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Producers / Story Section -->
+    <section>
+      <div class="section-title">出品者紹介・ストーリー</div>
+      <div class="grid grid-cols-2 gap-9 sm:grid-cols-1">
+        <div class="story-card flex items-center gap-6">
+          <img src="https://images.unsplash.com/photo-1498661367879-c1491c1a044b?auto=format&fit=crop&w=96&q=80"
+            alt="山田さんプロフィール" class="w-24 h-24 object-cover rounded-full border-4 border-green-200">
+          <div>
+            <div class="font-semibold text-green-800 text-lg mb-1">山田 太郎 さん</div>
+            <div class="text-sm text-green-700 mb-2">東京・練馬区の畑</div>
+            <div class="text-green-900">
+              家族で始めた畑仕事がきっかけで、今では近所の子どもたちも手伝いに来てくれます。小松菜は有機肥料だけで優しく育てました。安心してお召し上がりください。
+            </div>
+          </div>
+        </div>
+        <div class="story-card flex items-center gap-6">
+          <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=96&q=80"
+            alt="佐藤さんプロフィール" class="w-24 h-24 object-cover rounded-full border-4 border-green-200">
+          <div>
+            <div class="font-semibold text-green-800 text-lg mb-1">佐藤 花子 さん</div>
+            <div class="text-sm text-green-700 mb-2">埼玉・草加シェア畑</div>
+            <div class="text-green-900">
+              会社員の傍ら、週末農家として野菜づくりに挑戦中。ミニトマトは水やりと日当たりにこだわり、本来の甘みを引き出しました。「誰かの食卓に届きますように」と願っています。
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About/Hero Statement -->
+    <section class="mt-12 px-6">
+      <div class="bg-white bg-opacity-80 rounded-2xl p-8 shadow-sm flex items-center gap-8">
+        <div class="flex-shrink-0 text-center">
+          <i class="fas fa-tractor text-4xl text-green-600 mb-3"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-green-800 mb-2">Harvest Marketが目指すこと</h2>
+          <p class="text-green-900">
+            シェア畑で得た「農を楽しむ体験」に、<span class="font-bold bg-green-100 px-1 rounded">次のステージ</span>。<br>
+            自分の手で丁寧に育てた野菜や果物が、<b>誰かの「美味しい」に繋がる</b>。<br>
+            生産者の顔が見える安心感と、<b>育てた物語</b>も一緒にお届けします。<br>
+            <span class="inline-block mt-2 px-2 py-1 bg-green-50 text-green-800 rounded">都市生活者の新しいライフスタイル、はじまる。</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center text-green-800 text-xs py-8 mt-10 opacity-70">
+      &copy; 2024 Harvest Market. シェア畑の体験を、あなたの暮らしへ。
+    </footer>
+  </main>
+</body>
+</html>
