@@ -390,120 +390,129 @@
   </footer>
 
   <script>
-    // モバイルメニューの動作制御
     document.addEventListener('DOMContentLoaded', function() {
-      const menuButton = document.getElementById('menuButton');
-      const mobileMenu = document.getElementById('mobileMenu');
-      
-      menuButton.addEventListener('click', function() {
-        mobileMenu.classList.toggle('active');
+        const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzobDZTVFVW7-9YNOE-KhU0rkOcvtRDlbqt7I3zfBbLylSYucrTJfw0oiMxu00wC5e_bg/exec';
+        const menuButton = document.getElementById('menuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
         
-        // ハンバーガーメニューのアニメーション
-        const spans = menuButton.querySelectorAll('span');
-        if (mobileMenu.classList.contains('active')) {
-          spans[0].style.transform = 'rotate(45deg) translate(5px, 6px)';
-          spans[1].style.opacity = '0';
-          spans[2].style.transform = 'rotate(-45deg) translate(5px, -6px)';
-          document.body.style.overflow = 'hidden'; // スクロール防止
-        } else {
-          spans[0].style.transform = 'none';
-          spans[1].style.opacity = '1';
-          spans[2].style.transform = 'none';
-          document.body.style.overflow = ''; // スクロール許可
-        }
-      });
-      
-      // 商品画像選択機能
-      const imageItems = document.querySelectorAll('.product-image-item');
-      const selectedImageInput = document.getElementById('selectedImage');
-      const marketPriceDisplay = document.getElementById('marketPriceDisplay');
-      
-      // 市場相場情報
-      const marketPrices = {
-        'komatuna.png': '¥500〜¥900',
-        'tomato.png': '¥600〜¥1,000',
-        'ningin.jpg': '¥400〜¥800'
-      };
-      
-      imageItems.forEach(item => {
-        item.addEventListener('click', function() {
-          // 以前の選択を解除
-          document.querySelectorAll('.product-image-item').forEach(el => {
-            el.classList.remove('selected');
-          });
+        menuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('active');
           
-          // 新しい選択を適用
-          this.classList.add('selected');
-          const selectedImage = this.dataset.image;
-          selectedImageInput.value = selectedImage;
-          
-          // 市場相場表示を更新
-          marketPriceDisplay.textContent = marketPrices[selectedImage] || '¥500〜¥900';
+          // ハンバーガーメニューのアニメーション
+          const spans = menuButton.querySelectorAll('span');
+          if (mobileMenu.classList.contains('active')) {
+            spans[0].style.transform = 'rotate(45deg) translate(5px, 6px)';
+            spans[1].style.opacity = '0';
+            spans[2].style.transform = 'rotate(-45deg) translate(5px, -6px)';
+            document.body.style.overflow = 'hidden'; // スクロール防止
+          } else {
+            spans[0].style.transform = 'none';
+            spans[1].style.opacity = '1';
+            spans[2].style.transform = 'none';
+            document.body.style.overflow = ''; // スクロール許可
+          }
         });
-      });
-      
-      // 価格スライダー制御
-      const priceSlider = document.getElementById('priceSlider');
-      const priceDisplay = document.getElementById('priceDisplay');
-      const priceInput = document.getElementById('priceInput');
-      
-      priceSlider.addEventListener('input', function() {
-        const value = this.value;
-        priceDisplay.textContent = `¥${value}`;
-        priceInput.value = value;
-      });
-      
-      // 数量コントロール
-      const decreaseBtn = document.getElementById('decreaseQty');
-      const increaseBtn = document.getElementById('increaseQty');
-      const quantityInput = document.getElementById('quantity');
-      
-      decreaseBtn.addEventListener('click', function() {
-        const currentValue = parseInt(quantityInput.value);
-        if (currentValue > 1) {
-          quantityInput.value = currentValue - 1;
-        }
-      });
-      
-      increaseBtn.addEventListener('click', function() {
-        const currentValue = parseInt(quantityInput.value);
-        quantityInput.value = currentValue + 1;
-      });
-      
-      // フォーム送信処理
-      const productForm = document.getElementById('productForm');
-      
-      productForm.addEventListener('submit', function(e) {
-        e.preventDefault();
         
-        // フォームデータの取得
-        const formData = new FormData(this);
-        const productData = {
-          id: new Date().getTime(), // ユニークIDとして現在時刻を使用
-          name: formData.get('productName'),
-          image: formData.get('selectedImage'),
-          price: formData.get('price'),
-          description: formData.get('description'),
-          quantity: formData.get('quantity'),
-          growingMethod: formData.get('growingMethod'),
-          date: new Date().toISOString().split('T')[0] // YYYY-MM-DD形式
+        // 商品画像選択機能
+        const imageItems = document.querySelectorAll('.product-image-item');
+        const selectedImageInput = document.getElementById('selectedImage');
+        const marketPriceDisplay = document.getElementById('marketPriceDisplay');
+        
+        // 市場相場情報
+        const marketPrices = {
+          'komatuna.png': '¥500〜¥900',
+          'tomato.png': '¥600〜¥1,000',
+          'ningin.jpg': '¥400〜¥800'
         };
         
-        // 既存の出品データがあれば取得、なければ空の配列を作成
-        let products = JSON.parse(localStorage.getItem('myProducts')) || [];
+        imageItems.forEach(item => {
+          item.addEventListener('click', function() {
+            // 以前の選択を解除
+            document.querySelectorAll('.product-image-item').forEach(el => {
+              el.classList.remove('selected');
+            });
+            
+            // 新しい選択を適用
+            this.classList.add('selected');
+            const selectedImage = this.dataset.image;
+            selectedImageInput.value = selectedImage;
+            
+            // 市場相場表示を更新
+            marketPriceDisplay.textContent = marketPrices[selectedImage] || '¥500〜¥900';
+          });
+        });
         
-        // 新しい商品データを追加
-        products.push(productData);
+        // 価格スライダー制御
+        const priceSlider = document.getElementById('priceSlider');
+        const priceDisplay = document.getElementById('priceDisplay');
+        const priceInput = document.getElementById('priceInput');
         
-        // ローカルストレージに保存
-        localStorage.setItem('myProducts', JSON.stringify(products));
+        priceSlider.addEventListener('input', function() {
+          const value = this.value;
+          priceDisplay.textContent = `¥${value}`;
+          priceInput.value = value;
+        });
         
-        // 完了メッセージ
-        alert('出品が完了しました！マイページで確認できます。');
+        // 数量コントロール
+        const decreaseBtn = document.getElementById('decreaseQty');
+        const increaseBtn = document.getElementById('increaseQty');
+        const quantityInput = document.getElementById('quantity');
         
-        // マイページにリダイレクト
-        window.location.href = 'my-page.html';
-      });
+        decreaseBtn.addEventListener('click', function() {
+          const currentValue = parseInt(quantityInput.value);
+          if (currentValue > 1) {
+            quantityInput.value = currentValue - 1;
+          }
+        });
+        
+        increaseBtn.addEventListener('click', function() {
+          const currentValue = parseInt(quantityInput.value);
+          quantityInput.value = currentValue + 1;
+        });
+        
+        // フォーム送信処理
+        const productForm = document.getElementById('productForm');
+
+        productForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+
+          const formData = new FormData(this);
+          const productData = {
+            id: new Date().getTime(), // ユニークIDとして現在時刻を使用
+            name: formData.get('productName'),
+            image: formData.get('selectedImage'),
+            price: formData.get('price'),
+            description: formData.get('description'),
+            quantity: formData.get('quantity'),
+            growingMethod: formData.get('growingMethod'),
+            date: new Date().toISOString().split('T')[0] // YYYY-MM-DD形式
+          };
+
+          try {
+            const response = await fetch(GAS_ENDPOINT, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                action: 'addProduct',
+                ...productData
+              })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+              alert('出品が完了しました！マイページで確認できます。');
+              window.location.href = 'my-page.html';
+            } else {
+              alert('出品に失敗しました。');
+            }
+          } catch (error) {
+            console.error('Error adding product:', error);
+            alert('エラーが発生しました。もう一度お試しください。');
+          }
+        });
     });
   </script>
 </body>
