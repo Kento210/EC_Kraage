@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>カテゴリー商品一覧 - Harvest Market</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="シェア畑の利用者が育てた作物を探せるHarvest Marketのカテゴリー商品一覧ページ。">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* カラーパレット変数 */
+    :root {
+      --color-bg-main: #f8f5ee;
+      --color-text-main: #35432b;
+      --color-text-dark: #355b30;
+      --color-text-title: #4f694e;
+      --color-accent: #45653e;
+      --color-card-category: #f5f2e4;
+      --color-card-product: #fffdfa;
+      --color-card-story: #f1f8f3;
+      --shadow-sm: 0 2px 8px 0 rgba(155,168,104,0.05);
+      --shadow-md: 0 3px 12px 0 rgba(120,130,80,0.08);
+      --shadow-lg: 0 6px 16px 0 rgba(102,128,95,0.12);
+      --radius-sm: 1rem;
+      --radius-md: 1.35rem;
+      --radius-lg: 1.75rem;
+      --transition-fast: 0.15s ease;
+      --transition-hover: 0.2s ease;
+    }
+    
+    html { background: var(--color-bg-main); }
+    
+    body {
+      font-family: 'Noto Sans JP', 'Quicksand', sans-serif;
+      background: var(--color-bg-main);
+      color: var(--color-text-main);
+      font-size: 1.05rem;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    
+    .main-bg {
+      background: linear-gradient(135deg, #e4ede1 40%, #f3eada 100%);
+    }
+    
+    .logo-text {
+      font-family: 'Quicksand', 'Noto Sans JP',sans-serif;
+      font-weight: 700;
+      font-size: 2.15rem;
+      letter-spacing: .05em;
+      color: var(--color-accent);
+      text-shadow: 0 1px 0 #f2fff4;
+    }
+    
+    .section-title {
+      font-weight: 700;
+      font-size: 1.22rem;
+      color: var(--color-text-title);
+      margin-bottom: 1.1rem;
+      letter-spacing: .02em;
+    }
+    
+    /* モバイルメニュー */
+    .mobile-menu {
+      display: none;
+    }
+    
+    .hamburger-btn {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 21px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      z-index: 40;
+    }
+    
+    .hamburger-btn span {
+      width: 100%;
+      height: 3px;
+      background-color: var(--color-text-dark);
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+    
+    /* 商品カードスタイル */
+    .product-card {
+      background-color: #ffffff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+    }
+    
+    .product-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    
+    /* カテゴリーフィルタースタイル */
+    .category-chip {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .category-chip:hover, .category-chip.active {
+      background-color: var(--color-accent);
+      color: white;
+    }
+    
+    /* 広告スタイル */
+    .ad-banner {
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+    }
+    
+    .ad-banner:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+    
+    /* レスポンシブデザイン */
+    @media (max-width: 1024px) {
+      .main-bg {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      
+      header {
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        font-size: 1rem;
+      }
+      
+      .logo-text {
+        font-size: 1.7rem;
+      }
+      
+      .desktop-menu {
+        display: none;
+      }
+      
+      .hamburger-btn {
+        display: flex;
+      }
+      
+      .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--color-bg-main);
+        z-index: 35;
+        padding: 5rem 2rem 2rem;
+        flex-direction: column;
+      }
+      
+      .mobile-menu.active {
+        display: flex;
+      }
+      
+      .mobile-menu ul {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      
+      .mobile-menu a {
+        display: block;
+        font-size: 1.25rem;
+        padding: 0.5rem 0;
+      }
+      
+      .section-title {
+        font-size: 1.15rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .main-bg {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="bg-white bg-opacity-80 border-b border-green-100 py-4 px-10 flex items-center justify-between" style="position:sticky;top:0;z-index:30;">
+    <div class="flex flex-col">
+      <span class="logo-text flex items-center">
+        <i class="fas fa-seedling mr-2 text-green-700"></i>
+        Harvest Market
+      </span>
+      <div class="text-xs text-green-600 font-medium">Produced by AgriMedia</div>
+    </div>
+    <nav class="desktop-menu">
+      <ul class="flex gap-8 items-center text-green-900 font-semibold text-lg">
+        <li>
+          <a href="index.html" class="hover:underline">
+            <i class="fas fa-home mr-1"></i>トップ
+          </a>
+        </li>
+        <li>
+          <a href="search-products.html" class="hover:underline border-b-2 border-green-700">
+            <i class="fas fa-search mr-1"></i>商品を探す
+          </a>
+        </li>
+        <li>
+          <a href="add-product.html" class="hover:underline">
+            <i class="fas fa-plus-square mr-1"></i>出品する
+          </a>
+        </li>
+        <li>
+          <a href="my-page.html" class="hover:underline">
+            <i class="fas fa-user-circle mr-1"></i>マイページ
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <button class="hamburger-btn" aria-label="メニュー" id="menuButton">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="mobile-menu" id="mobileMenu">
+      <ul class="text-green-900 font-semibold">
+        <li>
+          <a href="index.html" class="hover:bg-green-50 rounded-md px-3">
+            <i class="fas fa-home mr-2"></i>トップ
+          </a>
+        </li>
+        <li>
+          <a href="search-products.html" class="hover:bg-green-50 rounded-md px-3 bg-green-50">
+            <i class="fas fa-search mr-2"></i>商品を探す
+          </a>
+        </li>
+        <li>
+          <a href="add-product.html" class="hover:bg-green-50 rounded-md px-3">
+            <i class="fas fa-plus-square mr-2"></i>出品する
+          </a>
+        </li>
+        <li>
+          <a href="my-page.html" class="hover:bg-green-50 rounded-md px-3">
+            <i class="fas fa-user-circle mr-2"></i>マイページ
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="main-bg px-4 sm:px-8 py-6 sm:py-8" style="max-width:1100px;margin:0 auto;">
+    <!-- カテゴリータイトル -->
+    <h1 id="categoryTitle" class="text-2xl font-bold text-green-900 mb-6 flex items-center">
+      <i class="fas fa-leaf mr-2 text-green-700" id="categoryIcon"></i>
+      <span id="categoryName">カテゴリー商品一覧</span>
+    </h1>
+
+    <!-- カテゴリー説明 -->
+    <div class="bg-white rounded-xl p-5 shadow-sm mb-6">
+      <p id="categoryDescription" class="text-green-800">
+        シェア畑で育てた新鮮な野菜を見つけましょう。安心・安全な農産物を、生産者の顔が見える形でお届けします。
+      </p>
+    </div>
+
+    <!-- アグリメディア広告バナー -->
+    <div class="mb-8">
+      <a href="https://note.com/hashtag/%E3%82%BD%E3%82%A6%E3%83%AB%E3%83%89%E3%82%A2%E3%82%A6%E3%83%88" target="_blank" class="block ad-banner">
+        <div class="bg-gradient-to-r from-green-50 to-amber-50 p-4 flex items-center">
+          <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center text-white text-2xl mr-4">
+            <i class="fas fa-seedling"></i>
+          </div>
+          <div class="flex-grow">
+            <div class="font-bold text-green-800 mb-1">アグリメディア特集</div>
+            <div class="text-green-700 text-sm">いま注目の「家庭菜園入門ガイド」をチェック！誰でも簡単、ベランダでできる野菜づくり</div>
+          </div>
+          <div class="flex-shrink-0 bg-green-600 text-white px-3 py-1 rounded-md text-sm font-medium">
+            詳しく見る
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- カテゴリーフィルター -->
+    <div class="bg-white rounded-xl p-5 shadow-sm mb-6">
+      <div class="section-title">サブカテゴリー</div>
+      <div class="flex flex-wrap gap-3 mb-2" id="subcategories">
+        <div id="all" class="category-chip bg-green-100 text-green-800 active">すべて表示</div>
+        <!-- サブカテゴリーは動的に追加されます -->
+      </div>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- 左サイドバー：フィルターとアグリメディア広告 -->
+      <div class="lg:w-1/4">
+        <!-- フィルター -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+          <h3 class="text-lg font-bold text-green-800 mb-4">フィルター</h3>
+          
+          <!-- 価格フィルター -->
+          <div class="mb-5">
+            <div class="font-semibold mb-2 text-green-700">価格</div>
+            <div>
+              <label class="flex items-center my-2">
+                <input type="checkbox" class="mr-2 price-filter" value="under500"> 500円未満
+              </label>
+              <label class="flex items-center my-2">
+                <input type="checkbox" class="mr-2 price-filter" value="500to1000"> 500円〜1,000円
+              </label>
+              <label class="flex items-center my-2">
+                <input type="checkbox" class="mr-2 price-filter" value="over1000"> 1,000円以上
+              </label>
+            </div>
+          </div>
+          
+          <!-- 栽培方法フィルター -->
+          <div class="mb-5">
+            <div class="font-semibold mb-2 text-green-700">栽培方法</div>
+            <div>
+              <label class="flex items-center my-2">
+                <input type="checkbox" class="mr-2 growing-method-filter" value="organic"> オーガニック
+              </label>
+              <label class="flex items-center my-2">
+                <input type="checkbox" class="mr-2 growing-method-filter" value="conventional"> 慣行農法
+              </label>
+            </div>
+          </div>
+          
+          <!-- 地域フィルター -->
+          <div class="mb-5">
+            <div class="font-semibold mb-2 text-green-700">生産地域</div>
+            <div>
+              <label class="flex items-center my-2">
+                <input type="checkbox" class="mr-2 region-filter" value="tokyo"> 東京都
+              </label>
+              <label class="flex items-center my-2">
+                <input type="checkbox" class="mr-2 region-filter" value="saitama"> 埼玉県
+              </label>
+              <label class="flex items-center my-2">
+                <input type="checkbox" class="mr-2 region-filter" value="chiba"> 千葉県
+              </label>
+              <label class="flex items-center my-2">
+                <input type="checkbox" class="mr-2 region-filter" value="kanagawa"> 神奈川県
+              </label>
+            </div>
+          </div>
+          
+          <!-- リセットボタン -->
+          <button id="resetFilters" class="w-full bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-all">
+            <i class="fas fa-sync-alt mr-1"></i> フィルターをリセット
+          </button>
+        </div>
+        
+        <!-- サイドバー広告 -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="text-center mb-3">
+            <span class="text-xs text-gray-500">PR</span>
+          </div>
+          
+          <a href="https://note.com/hashtag/%E3%82%BD%E3%82%A6%E3%83%AB%E3%83%89%E3%82%A2%E3%82%A6%E3%83%88" target="_blank" class="block">
+            <img src="" alt="アグリメディア 家庭菜園講座" class="w-full rounded-lg mb-3">
+            <h4 class="font-bold text-green-800 mb-1">アグリメディア家庭菜園講座</h4>
+            <p class="text-sm text-green-700 mb-3">初心者でも失敗しない！プロ農家が教える野菜づくり</p>
+            <div class="bg-green-600 text-white text-center py-2 rounded-md text-sm">
+              無料で資料をもらう
+            </div>
+          </a>
+        </div>
+      </div>
+      
+      <!-- 右メインコンテンツ：商品リスト -->
+      <div class="lg:w-3/4">
+        <!-- 並び替えと商品数表示 -->
+        <div class="flex justify-between items-center mb-6">
+          <div class="text-green-800">
+            <span id="productCount">0</span> 件の商品
+          </div>
+          <div class="flex items-center gap-3">
+            <label for="sortOrder" class="text-sm text-green-700">並び替え:</label>
+            <select id="sortOrder" class="border border-green-200 rounded-md px-2 py-1">
+              <option value="newest">新着順</option>
+              <option value="priceAsc">価格が安い順</option>
+              <option value="priceDesc">価格が高い順</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- 商品グリッド -->
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+      </div>
+    </div>
+
+    <!-- アグリメディアの下部広告 -->
+    <div class="mt-12 mb-8">
+      <div class="bg-white rounded-xl p-6 shadow-sm">
+        <div class="flex flex-col sm:flex-row items-center gap-6">
+          <div class="flex-shrink-0">
+            <img src="https://note.com/hashtag/%E3%82%BD%E3%82%A6%E3%83%AB%E3%83%89%E3%82%A2%E3%82%A6%E3%83%88" alt="アグリメディアロゴ" class="w-24 h-24 rounded-lg">
+          </div>
+          <div class="flex-grow">
+            <h3 class="text-lg font-bold text-green-800 mb-2">シェア畑で食と農の新体験を</h3>
+            <p class="text-sm text-green-700 mb-4">アグリメディアは、都市生活者と農のつながりを創造する企業です。シェア畑の運営からオーガニック野菜の定期宅配まで、新しい食のライフスタイルをご提案しています。</p>
+            <div class="flex flex-wrap gap-3">
+              <a href="https://note.com/hashtag/%E3%82%BD%E3%82%A6%E3%83%AB%E3%83%89%E3%82%A2%E3%82%A6%E3%83%88" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm transition-all">
+                シェア畑を探す
+              </a>
+              <a href="https://note.com/hashtag/%E3%82%BD%E3%82%BD%E3%82%A6%E3%83%AB%E3%83%89%E3%82%A2%E3%82%A6%E3%83%88" target="_blank" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-md text-sm transition-all">
+                野菜の定期便
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 text-center">
+      <a href="index.html" class="text-green-700 hover:text-green-800 font-medium">
+        <i class="fas fa-arrow-left mr-1"></i> トップページに戻る
+      </a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center text-green-800 text-xs py-6 sm:py-8 mt-8 sm:mt-10 opacity-70">
+    &copy; 2025 アグリメディア 農に関わる人を、より多く、より明るく
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // モバイルメニューの動作制御
+      const menuButton = document.getElementById('menuButton');
+      const mobileMenu = document.getElementById('mobileMenu');
+      
+      menuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('active');
+        
+        // ハンバーガーメニューのアニメーション
+        const spans = menuButton.querySelectorAll('span');
+        if (mobileMenu.classList.contains('active')) {
+          spans[0].style.transform = 'rotate(45deg) translate(5px, 6px)';
+          spans[1].style.opacity = '0';
+          spans[2].style.transform = 'rotate(-45deg) translate(5px, -6px)';
+          document.body.style.overflow = 'hidden'; // スクロール防止
+        } else {
+          spans[0].style.transform = 'none';
+          spans[1].style.opacity = '1';
+          spans[2].style.transform = 'none';
+          document.body.style.overflow = ''; // スクロール許可
+        }
+      });
+      
+      // カテゴリー情報の定義
+      const categories = {
+        'vegetable': {
+          name: '季節の野菜',
+          description: '旬の季節野菜を生産者から直接お届け。みずみずしさと栄養をそのままに！',
+          icon: 'fas fa-leaf',
+          subcategories: ['葉物野菜', '根菜', '果菜類']
+        },
+        'fruit': {
+          name: '旬の果物',
+          description: '自然の甘さをそのまま味わえる、採れたての果物をご提供します。',
+          icon: 'fas fa-apple-alt',
+          subcategories: ['柑橘類', '実もの', 'ベリー類']
+        },
+        'gift': {
+          name: 'ギフト向けセット',
+          description: '大切な方への贈り物に。こだわりの詰まった野菜・果物セットです。',
+          icon: 'fas fa-gift',
+          subcategories: ['季節のお祝い', '感謝の贈り物', '定期便']
+        },
+        'organic': {
+          name: 'オーガニック野菜',
+          description: '化学肥料・農薬不使用で育てた、安心安全のオーガニック野菜です。',
+          icon: 'fas fa-seedling',
+          subcategories: ['有機JAS認証', '無農薬栽培', '自然栽培']
+        }
+      };
+      
+      // URLからカテゴリーを取得
+      const urlParams = new URLSearchParams(window.location.search);
+      const category = urlParams.get('category') || 'vegetable';
+      
+      // カテゴリー情報を表示
+      const categoryInfo = categories[category] || categories.vegetable;
+      document.getElementById('categoryName').textContent = categoryInfo.name;
+      document.getElementById('categoryDescription').textContent = categoryInfo.description;
+      document.getElementById('categoryIcon').className = `${categoryInfo.icon} mr-2 text-green-700`;
+      
+      // サブカテゴリーの追加
+      const subcategoriesContainer = document.getElementById('subcategories');
+      categoryInfo.subcategories.forEach((subcat, index) => {
+        const chip = document.createElement('div');
+        chip.id = `subcat-${index}`;
+        chip.className = 'category-chip bg-green-100 text-green-800';
+        chip.textContent = subcat;
+        subcategoriesContainer.appendChild(chip);
+      });
+      
+      // サブカテゴリーチップの動作制御
+      const categoryChips = document.querySelectorAll('.category-chip');
+      let activeSubcategory = 'all';
+      
+      categoryChips.forEach(chip => {
+        chip.addEventListener('click', function() {
+          // アクティブなチップの切り替え
+          categoryChips.forEach(c => c.classList.remove('active'));
+          this.classList.add('active');
+          
+          // 選択されたサブカテゴリーを記録
+          activeSubcategory = this.id;
+          
+          // 商品をフィルタリング
+          filterProducts();
+        });
+      });
+      
+      // サンプル商品データ
+      const sampleProducts = [
+        {
+          id: 1,
+          name: '新鮮な小松菜',
+          image: 'komatuna.png',
+          price: 500,
+          growingMethod: 'organic',
+          producer: '山田 太郎',
+          region: 'tokyo',
+          category: 'vegetable',
+          subcategory: '葉物野菜',
+          date: '2025-04-25'
+        },
+        {
+          id: 2,
+          name: '甘いミニトマト',
+          image: 'tomato.png',
+          price: 800,
+          growingMethod: 'organic',
+          producer: '佐藤 花子',
+          region: 'saitama',
+          category: 'vegetable',
+          subcategory: '果菜類',
+          date: '2025-04-28'
+        },
+        {
+          id: 3,
+          name: 'オーガニック人参',
+          image: 'ningin.jpg',
+          price: 600,
+          growingMethod: 'organic',
+          producer: '高橋 健太',
+          region: 'chiba',
+          category: 'vegetable',
+          subcategory: '根菜',
+          date: '2025-04-20'
+        },
+        {
+          id: 4,
+          name: '採れたて小松菜',
+          image: 'komatuna.png',
+          price: 450,
+          growingMethod: 'conventional',
+          producer: '山田 太郎',
+          region: 'tokyo',
+          category: 'vegetable',
+          subcategory: '葉物野菜',
+          date: '2025-04-30'
+        },
+        {
+          id: 5,
+          name: '新鮮ミニトマト',
+          image: 'tomato.png',
+          price: 1200,
+          growingMethod: 'organic',
+          producer: '鈴木 一郎',
+          region: 'kanagawa',
+          category: 'vegetable',
+          subcategory: '果菜類',
+          date: '2025-04-15'
+        },
+        {
+          id: 6,
+          name: '旬の人参',
+          image: 'ningin.jpg',
+          price: 350,
+          growingMethod: 'conventional',
+          producer: '佐藤 花子',
+          region: 'saitama',
+          category: 'vegetable',
+          subcategory: '根菜',
+          date: '2025-04-27'
+        },
+        {
+          id: 7,
+          name: 'プレミアム小松菜',
+          image: 'komatuna.png',
+          price: 950,
+          growingMethod: 'organic',
+          producer: '鈴木 一郎',
+          region: 'kanagawa',
+          category: 'vegetable',
+          subcategory: '葉物野菜',
+          date: '2025-04-22'
+        },
+        {
+          id: 8,
+          name: '季節のフルーツバスケット',
+          image: 'tomato.png',
+          price: 2500,
+          growingMethod: 'organic',
+          producer: '高橋 健太',
+          region: 'chiba',
+          category: 'gift',
+          subcategory: '季節のお祝い',
+          date: '2025-04-18'
+        },
+        {
+          id: 9,
+          name: '有機いちご',
+          image: 'ningin.jpg',
+          price: 1500,
+          growingMethod: 'organic',
+          producer: '山田 太郎',
+          region: 'tokyo',
+          category: 'fruit',
+          subcategory: 'ベリー類',
+          date: '2025-04-24'
+        },
+        {
+          id: 10,
+          name: 'オーガニック野菜セット',
+          image: 'komatuna.png',
+          price: 3000,
+          growingMethod: 'organic',
+          producer: '佐藤 花子',
+          region: 'saitama',
+          category: 'organic',
+          subcategory: '有機JAS認証',
+          date: '2025-04-29'
+        }
+      ];
+      
+      // フィルターの動作制御
+      const priceFilters = document.querySelectorAll('.price-filter');
+      const growingMethodFilters = document.querySelectorAll('.growing-method-filter');
+      const regionFilters = document.querySelectorAll('.region-filter');
+      const sortOrderSelect = document.getElementById('sortOrder');
+      
+      function addFilterEventListeners(filters) {
+        filters.forEach(filter => {
+          filter.addEventListener('change', filterProducts);
+        });
+      }
+      
+      addFilterEventListeners(priceFilters);
+      addFilterEventListeners(growingMethodFilters);
+      addFilterEventListeners(regionFilters);
+      
+      sortOrderSelect.addEventListener('change', filterProducts);
+      
+      // フィルターリセットボタン
+      const resetFiltersButton = document.getElementById('resetFilters');
+      
+      resetFiltersButton.addEventListener('click', function() {
+        // チェックボックスをリセット
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+          checkbox.checked = false;
+        });
+        
+        // カテゴリーチップをリセット
+        categoryChips.forEach(chip => chip.classList.remove('active'));
+        document.getElementById('all').classList.add('active');
+        activeSubcategory = 'all';
+        
+        // 並び替えをリセット
+        sortOrderSelect.value = 'newest';
+        
+        // 商品を再フィルタリング
+        filterProducts();
+      });
+      
+      // 商品をフィルタリングして表示する関数
+      function filterProducts() {
+        const selectedPriceRanges = Array.from(priceFilters)
+          .filter(filter => filter.checked)
+          .map(filter => filter.value);
+        
+        const selectedGrowingMethods = Array.from(growingMethodFilters)
+          .filter(filter => filter.checked)
+          .map(filter => filter.value);
+        
+        const selectedRegions = Array.from(regionFilters)
+          .filter(filter => filter.checked)
+          .map(filter => filter.value);
+        
+        const sortOrder = sortOrderSelect.value;
+        
+        // 商品をフィルタリング
+        let filteredProducts = sampleProducts.filter(product => {
+          // 現在のカテゴリーに一致する商品のみ
+          const matchesMainCategory = product.category === category;
+          
+          // サブカテゴリーでフィルタリング
+          const matchesSubcategory = activeSubcategory === 'all' || 
+              (activeSubcategory.startsWith('subcat-') && 
+               product.subcategory === categoryInfo.subcategories[activeSubcategory.split('-')[1]]);
+          
+          // 価格範囲でのフィルタリング
+          let matchesPrice = selectedPriceRanges.length === 0;
+          
+          if (!matchesPrice) {
+            for (const range of selectedPriceRanges) {
+              if (range === 'under500' && product.price < 500) {
+                matchesPrice = true;
+              } else if (range === '500to1000' && product.price >= 500 && product.price <= 1000) {
+                matchesPrice = true;
+              } else if (range === 'over1000' && product.price > 1000) {
+                matchesPrice = true;
+              }
+            }
+          }
+          
+          // 栽培方法でのフィルタリング
+          const matchesGrowingMethod = selectedGrowingMethods.length === 0 || 
+            selectedGrowingMethods.includes(product.growingMethod);
+          
+          // 地域でのフィルタリング
+          const matchesRegion = selectedRegions.length === 0 || 
+            selectedRegions.includes(product.region);
+          
+          return matchesMainCategory && matchesSubcategory && matchesPrice && matchesGrowingMethod && matchesRegion;
+        });
+        
+        // 並び替え
+        if (sortOrder === 'newest') {
+          filteredProducts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        } else if (sortOrder === 'priceAsc') {
+          filteredProducts.sort((a, b) => a.price - b.price);
+        } else if (sortOrder === 'priceDesc') {
+          filteredProducts.sort((a, b) => b.price - a.price);
+        }
+        
+        // 商品を表示
+        displayProducts(filteredProducts);
+      }
+      
+      // 商品を表示する関数
+      function displayProducts(products) {
+        const productGrid = document.getElementById('productGrid');
+        const productCount = document.getElementById('productCount');
+        
+        // 商品点数を更新
+        productCount.textContent = products.length;
+        
+        // 商品グリッドをクリア
+        productGrid.innerHTML = '';
+        
+        // 商品がない場合
+        if (products.length === 0) {
+          const noProductsMessage = document.createElement('div');
+          noProductsMessage.className = 'col-span-full text-center py-10';
+          noProductsMessage.innerHTML = `
+            <i class="fas fa-search text-green-300 text-5xl mb-3"></i>
+            <p class="text-green-700 mb-4">条件に一致する商品が見つかりませんでした</p>
+            <button id="clearSearch" class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-md transition duration-200">
+              検索条件をクリア
+            </button>
+          `;
+          productGrid.appendChild(noProductsMessage);
+          
+          // 「検索条件をクリア」ボタンのイベント設定
+          document.getElementById('clearSearch').addEventListener('click', function() {
+            resetFiltersButton.click();
+          });
+          
+          return;
+        }
+        
+        // 商品カードを作成して表示
+        products.forEach(product => {
+          const card = document.createElement('div');
+          card.className = 'product-card';
+          
+          const growingMethodLabel = product.growingMethod === 'organic' ? 
+            '<span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">オーガニック</span>' : 
+            '<span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs">慣行農法</span>';
+          
+          let regionLabel = '';
+          switch (product.region) {
+            case 'tokyo': 
+              regionLabel = '東京都';
+              break;
+            case 'saitama':
+              regionLabel = '埼玉県';
+              break;
+            case 'chiba':
+              regionLabel = '千葉県';
+              break;
+            case 'kanagawa':
+              regionLabel = '神奈川県';
+              break;
+            default:
+              regionLabel = '不明';
+          }
+          
+          card.innerHTML = `
+            <div class="relative">
+              <img src="./public/${product.image}" alt="${product.name}" class="w-full h-40 object-cover">
+              <div class="absolute top-2 right-2 bg-green-600 text-white px-2 py-1 rounded-full text-xs">
+                ¥${product.price}
+              </div>
+            </div>
+            <div class="p-4">
+              <h3 class="font-bold text-green-900 text-lg mb-1">${product.name}</h3>
+              <div class="flex items-center text-sm text-green-700 mb-3">
+                <i class="fas fa-user mr-1 text-green-800"></i>
+                ${product.producer} <span class="ml-2 text-xs">(${regionLabel})</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <div>
+                  ${growingMethodLabel}
+                </div>
+                <a href="#" class="bg-green-700 hover:bg-green-800 text-white px-3 py-1 rounded-md text-sm transition-colors">
+                  商品詳細
+                </a>
+              </div>
+            </div>
+          `;
+          
+          productGrid.appendChild(card);
+        });
+      }
+      
+      // 初期表示
+      filterProducts();
+    });
+  </script>
+</body>
+</html>

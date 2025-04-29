@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>商品詳細 - Harvest Market</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="シェア畑の利用者が育てた作物の詳細情報 - Harvest Market">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* カラーパレット変数 */
+    :root {
+      --color-bg-main: #f8f5ee;
+      --color-text-main: #35432b;
+      --color-text-dark: #355b30;
+      --color-text-title: #4f694e;
+      --color-accent: #45653e;
+      --color-card-category: #f5f2e4;
+      --color-card-product: #fffdfa;
+      --color-card-story: #f1f8f3;
+      --shadow-sm: 0 2px 8px 0 rgba(155,168,104,0.05);
+      --shadow-md: 0 3px 12px 0 rgba(120,130,80,0.08);
+      --shadow-lg: 0 6px 16px 0 rgba(102,128,95,0.12);
+      --radius-sm: 1rem;
+      --radius-md: 1.35rem;
+      --radius-lg: 1.75rem;
+      --transition-fast: 0.15s ease;
+      --transition-hover: 0.2s ease;
+    }
+    
+    html { background: var(--color-bg-main); }
+    
+    body {
+      font-family: 'Noto Sans JP', 'Quicksand', sans-serif;
+      background: var(--color-bg-main);
+      color: var(--color-text-main);
+      font-size: 1.05rem;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    
+    .main-bg {
+      background: linear-gradient(135deg, #e4ede1 40%, #f3eada 100%);
+    }
+    
+    .logo-text {
+      font-family: 'Quicksand', 'Noto Sans JP',sans-serif;
+      font-weight: 700;
+      font-size: 2.15rem;
+      letter-spacing: .05em;
+      color: var(--color-accent);
+      text-shadow: 0 1px 0 #f2fff4;
+    }
+    
+    .section-title {
+      font-weight: 700;
+      font-size: 1.22rem;
+      color: var(--color-text-title);
+      margin-bottom: 1.1rem;
+      letter-spacing: .02em;
+    }
+    
+    /* モバイルメニュー */
+    .mobile-menu {
+      display: none;
+    }
+    
+    .hamburger-btn {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 21px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      z-index: 40;
+    }
+    
+    .hamburger-btn span {
+      width: 100%;
+      height: 3px;
+      background-color: var(--color-text-dark);
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+    
+    /* 商品カードスタイル */
+    .product-card {
+      background-color: #ffffff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+    }
+    
+    .product-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    
+    /* 数量選択スタイル */
+    .quantity-selector {
+      display: flex;
+      align-items: center;
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+    
+    .quantity-btn {
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f9fafb;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .quantity-btn:hover {
+      background-color: #f3f4f6;
+    }
+    
+    .quantity-input {
+      width: 3rem;
+      height: 2.5rem;
+      border: none;
+      text-align: center;
+      font-weight: 600;
+    }
+    
+    .quantity-input:focus {
+      outline: none;
+    }
+    
+    /* タブスタイル */
+    .tab-button {
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s ease;
+    }
+    
+    .tab-button.active {
+      border-bottom: 2px solid var(--color-accent);
+      color: var(--color-accent);
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* レスポンシブデザイン */
+    @media (max-width: 1024px) {
+      .main-bg {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      
+      header {
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        font-size: 1rem;
+      }
+      
+      .logo-text {
+        font-size: 1.7rem;
+      }
+      
+      .desktop-menu {
+        display: none;
+      }
+      
+      .hamburger-btn {
+        display: flex;
+      }
+      
+      .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--color-bg-main);
+        z-index: 35;
+        padding: 5rem 2rem 2rem;
+        flex-direction: column;
+      }
+      
+      .mobile-menu.active {
+        display: flex;
+      }
+      
+      .mobile-menu ul {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      
+      .mobile-menu a {
+        display: block;
+        font-size: 1.25rem;
+        padding: 0.5rem 0;
+      }
+      
+      .section-title {
+        font-size: 1.15rem;
+      }
+      
+      .product-images {
+        flex-direction: column;
+      }
+      
+      .image-thumbnails {
+        flex-direction: row;
+        order: 2;
+        margin-top: 1rem;
+        margin-left: 0;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .main-bg {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="bg-white bg-opacity-80 border-b border-green-100 py-4 px-10 flex items-center justify-between" style="position:sticky;top:0;z-index:30;">
+    <div class="flex flex-col">
+      <span class="logo-text flex items-center">
+        <i class="fas fa-seedling mr-2 text-green-700"></i>
+        Harvest Market
+      </span>
+      <div class="text-xs text-green-600 font-medium">Produced by AgriMedia</div>
+    </div>
+    <nav class="desktop-menu">
+      <ul class="flex gap-8 items-center text-green-900 font-semibold text-lg">
+        <li>
+          <a href="index.html" class="hover:underline">
+            <i class="fas fa-home mr-1"></i>トップ
+          </a>
+        </li>
+        <li>
+          <a href="search-products.html" class="hover:underline">
+            <i class="fas fa-search mr-1"></i>商品を探す
+          </a>
+        </li>
+        <li>
+          <a href="add-product.html" class="hover:underline">
+            <i class="fas fa-plus-square mr-1"></i>出品する
+          </a>
+        </li>
+        <li>
+          <a href="my-page.html" class="hover:underline">
+            <i class="fas fa-user-circle mr-1"></i>マイページ
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <button class="hamburger-btn" aria-label="メニュー" id="menuButton">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="mobile-menu" id="mobileMenu">
+      <ul class="text-green-900 font-semibold">
+        <li>
+          <a href="index.html" class="hover:bg-green-50 rounded-md px-3">
+            <i class="fas fa-home mr-2"></i>トップ
+          </a>
+        </li>
+        <li>
+          <a href="search-products.html" class="hover:bg-green-50 rounded-md px-3">
+            <i class="fas fa-search mr-2"></i>商品を探す
+          </a>
+        </li>
+        <li>
+          <a href="add-product.html" class="hover:bg-green-50 rounded-md px-3">
+            <i class="fas fa-plus-square mr-2"></i>出品する
+          </a>
+        </li>
+        <li>
+          <a href="my-page.html" class="hover:bg-green-50 rounded-md px-3">
+            <i class="fas fa-user-circle mr-2"></i>マイページ
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="main-bg px-4 sm:px-8 py-6 sm:py-8" style="max-width:1100px;margin:0 auto;">
+    <!-- パンくずリスト -->
+    <div class="text-sm text-green-700 mb-6">
+      <a href="index.html" class="hover:underline">トップ</a>
+      <span class="mx-2">&gt;</span>
+      <a href="category-products.html?category=vegetable" class="hover:underline">季節の野菜</a>
+      <span class="mx-2">&gt;</span>
+      <span id="productName">甘いミニトマト</span>
+    </div>
+
+    <!-- 商品詳細セクション -->
+    <div class="bg-white rounded-xl p-6 shadow-sm mb-8">
+      <div class="flex flex-col lg:flex-row gap-8">
+        <!-- 商品画像 -->
+        <div class="lg:w-1/2">
+          <div class="flex product-images">
+            <!-- メイン画像 -->
+            <div class="flex-grow">
+              <img id="mainImage" src="./public/tomato.png" alt="甘いミニトマト" class="w-full h-auto object-cover rounded-lg shadow-md">
+            </div>
+            
+            <!-- サムネイル画像 -->
+            <div class="image-thumbnails flex flex-col ml-4 gap-3">
+              <div class="w-16 h-16 rounded-md shadow-sm overflow-hidden cursor-pointer border-2 border-green-600">
+                <img src="./public/tomato.png" alt="甘いミニトマト1" class="w-full h-full object-cover thumbnail-image" data-image="./public/tomato.png">
+              </div>
+              <div class="w-16 h-16 rounded-md shadow-sm overflow-hidden cursor-pointer border border-gray-200">
+                <img src="./public/tomato.png" alt="甘いミニトマト2" class="w-full h-full object-cover thumbnail-image" data-image="./public/tomato.png">
+              </div>
+              <div class="w-16 h-16 rounded-md shadow-sm overflow-hidden cursor-pointer border border-gray-200">
+                <img src="./public/tomato.png" alt="甘いミニトマト3" class="w-full h-full object-cover thumbnail-image" data-image="./public/tomato.png">
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 商品情報 -->
+        <div class="lg:w-1/2">
+          <div class="flex items-center mb-2">
+            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs mr-2">オーガニック</span>
+            <span class="bg-amber-100 text-amber-800 px-2 py-1 rounded-full text-xs">埼玉県産</span>
+          </div>
+          
+          <h1 class="text-2xl font-bold text-green-900 mb-2">甘いミニトマト</h1>
+          
+          <div class="text-green-700 mb-6">
+            <p class="mb-2">出品者: <span class="font-medium">佐藤 花子</span></p>
+            <p class="flex items-center">
+              <i class="fas fa-calendar-alt mr-1"></i> 収穫日: <span class="font-medium ml-1">2025年4月28日</span>
+            </p>
+          </div>
+          
+          <div class="text-3xl font-bold text-green-900 mb-6">
+            ¥800 <span class="text-sm font-normal text-gray-600">(税込)</span>
+          </div>
+          
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-green-800 mb-2">商品説明</h3>
+            <p class="text-green-700 leading-relaxed">
+              シェア畑で丹精込めて育てた完熟ミニトマトです。化学肥料を使わず、有機栽培で育てているため、安心して食べられます。そのまま食べても、サラダに加えても甘みが際立ちます。収穫したその日に出荷しているので鮮度抜群です！
+            </p>
+          </div>
+          
+          <div class="mb-6">
+            <div class="flex items-center gap-4">
+              <div>
+                <span class="text-green-800 font-medium">数量</span>
+              </div>
+              <div class="quantity-selector">
+                <button class="quantity-btn" id="decreaseQuantity">
+                  <i class="fas fa-minus text-gray-500"></i>
+                </button>
+                <input type="text" value="1" class="quantity-input" id="quantityInput" readonly>
+                <button class="quantity-btn" id="increaseQuantity">
+                  <i class="fas fa-plus text-gray-500"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex flex-col sm:flex-row gap-4 mb-6">
+            <button class="bg-green-700 hover:bg-green-800 text-white py-3 px-6 rounded-md font-semibold transition-colors flex-grow flex items-center justify-center">
+              <i class="fas fa-shopping-cart mr-2"></i> カートに入れる
+            </button>
+            <button class="border border-green-700 text-green-700 hover:bg-green-50 py-3 px-6 rounded-md font-semibold transition-colors">
+              <i class="far fa-heart"></i>
+            </button>
+          </div>
+          
+          <div class="text-sm text-gray-600">
+            <p class="flex items-center mb-1">
+              <i class="fas fa-truck mr-2"></i> 最短で明日お届け可能
+            </p>
+            <p class="flex items-center">
+              <i class="fas fa-undo-alt mr-2"></i> 商品に問題がある場合は返品可能
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 商品詳細タブ -->
+    <div class="bg-white rounded-xl shadow-sm mb-8 overflow-hidden">
+      <div class="flex border-b border-gray-200">
+        <div class="tab-button active" data-tab="details">商品詳細</div>
+        <div class="tab-button" data-tab="producer">生産者情報</div>
+        <div class="tab-button" data-tab="shipping">配送・返品について</div>
+      </div>
+      
+      <!-- 商品詳細タブコンテンツ -->
+      <div id="details" class="tab-content active p-6">
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold text-green-800 mb-3">栽培方法</h3>
+          <p class="mb-4">
+            有機JAS認証を受けた畑で、化学肥料や農薬を使用せず栽培しています。太陽の光をたっぷりと浴びて育ったトマトは、甘みが強く、栄養価も高いのが特徴です。
+          </p>
+        </div>
+        
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold text-green-800 mb-3">おすすめの食べ方</h3>
+          <p class="mb-2">
+            そのまま洗って食べるのはもちろん、以下の食べ方もおすすめです。
+          </p>
+          <ul class="list-disc pl-6 text-green-700">
+            <li class="mb-1">サラダに加える</li>
+            <li class="mb-1">オリーブオイルと塩でシンプルに</li>
+            <li class="mb-1">バジルとモッツァレラチーズと合わせる</li>
+            <li>パスタソースに使う</li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold text-green-800 mb-3">栄養成分</h3>
+          <p>
+            ミニトマトにはリコピン、ビタミンC、カリウムなどが豊富に含まれています。リコピンは抗酸化作用があり、健康維持に役立つと言われています。
+          </p>
+        </div>
+      </div>
+      
+      <!-- 生産者情報タブコンテンツ -->
+      <div id="producer" class="tab-content p-6">
+        <div class="flex items-center mb-6">
+          <div class="w-20 h-20 bg-green-100 rounded-full overflow-hidden mr-4">
+            <img src="./public/hanako.png" alt="佐藤花子" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-green-800">佐藤 花子</h3>
+            <p class="text-sm text-green-700">埼玉県深谷市でオーガニック野菜を栽培</p>
+          </div>
+        </div>
+        
+        <div class="mb-6">
+          <p class="mb-4">
+            私は10年前から有機農法にこだわり、安心・安全な野菜づくりを心がけています。特にトマトは品種選びから土づくりまでこだわっています。消費者の皆さんに「本物の美味しさ」を知ってもらえることが何よりの喜びです。
+          </p>
+          <p>
+            シェア畑では定期的に栽培講習会も開催しているので、興味のある方はぜひご参加ください。
+          </p>
+        </div>
+        
+        <div class="py-3 px-4 bg-green-50 rounded-lg">
+          <h4 class="font-semibold text-green-800 mb-2">栽培ポリシー</h4>
+          <ul class="list-disc pl-6 text-green-700">
+            <li class="mb-1">化学肥料・農薬不使用</li>
+            <li class="mb-1">自家製堆肥の活用</li>
+            <li class="mb-1">季節に合わせた旬の野菜を栽培</li>
+            <li>地域の生態系を守る農業</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- 配送・返品タブコンテンツ -->
+      <div id="shipping" class="tab-content p-6">
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold text-green-800 mb-3">配送について</h3>
+          <p class="mb-2">
+            注文確定後、最短で翌日に発送いたします。地域によって配達日数が異なります。
+          </p>
+          <ul class="list-disc pl-6 text-green-700">
+            <li class="mb-1">関東地方：1〜2日</li>
+            <li class="mb-1">関西地方：2〜3日</li>
+            <li>その他の地域：3〜4日</li>
+          </ul>
+        </div>
+        
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold text-green-800 mb-3">送料</h3>
+          <p>
+            全国一律500円（税込）<br>
+            3,000円以上のご注文で送料無料
+          </p>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold text-green-800 mb-3">返品・交換について</h3>
+          <p class="mb-2">
+            商品到着後、以下の場合は返品・交換を承ります。
+          </p>
+          <ul class="list-disc pl-6 text-green-700 mb-2">
+            <li class="mb-1">商品に傷みや劣化が見られる場合</li>
+            <li>注文した商品と異なる場合</li>
+          </ul>
+          <p class="text-sm">
+            ※返品・交換を希望される場合は、商品到着後2日以内にご連絡ください。<br>
+            ※生鮮食品のため、お客様の都合による返品はお受けできません。
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- おすすめ商品 -->
+    <div class="mb-8">
+      <h2 class="section-title">関連商品</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5" id="relatedProducts">
+        <!-- 関連商品1 -->
+        <div class="product-card">
+          <div class="relative">
+            <img src="./public/komatuna.png" alt="新鮮な小松菜" class="w-full h-40 object-cover">
+            <div class="absolute top-2 right-2 bg-green-600 text-white px-2 py-1 rounded-full text-xs">
+              ¥500
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-green-900 text-lg mb-1">新鮮な小松菜</h3>
+            <div class="flex items-center text-sm text-green-700 mb-3">
+              <i class="fas fa-user mr-1 text-green-800"></i>
+              山田 太郎 <span class="ml-2 text-xs">(東京都)</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <div>
+                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">オーガニック</span>
+              </div>
+              <a href="product-detail.html" class="bg-green-700 hover:bg-green-800 text-white px-3 py-1 rounded-md text-sm transition-colors">
+                詳細を見る
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 関連商品2 -->
+        <div class="product-card">
+          <div class="relative">
+            <img src="./public/ningin.jpg" alt="オーガニック人参" class="w-full h-40 object-cover">
+            <div class="absolute top-2 right-2 bg-green-600 text-white px-2 py-1 rounded-full text-xs">
+              ¥600
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-green-900 text-lg mb-1">オーガニック人参</h3>
+            <div class="flex items-center text-sm text-green-700 mb-3">
+              <i class="fas fa-user mr-1 text-green-800"></i>
+              高橋 健太 <span class="ml-2 text-xs">(千葉県)</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <div>
+                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">オーガニック</span>
+              </div>
+              <a href="product-detail.html" class="bg-green-700 hover:bg-green-800 text-white px-3 py-1 rounded-md text-sm transition-colors">
+                詳細を見る
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 関連商品3 -->
+        <div class="product-card">
+          <div class="relative">
+            <img src="./public/tomato.png" alt="新鮮ミニトマト" class="w-full h-40 object-cover">
+            <div class="absolute top-2 right-2 bg-green-600 text-white px-2 py-1 rounded-full text-xs">
+              ¥1,200
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-green-900 text-lg mb-1">新鮮ミニトマト</h3>
+            <div class="flex items-center text-sm text-green-700 mb-3">
+              <i class="fas fa-user mr-1 text-green-800"></i>
+              鈴木 一郎 <span class="ml-2 text-xs">(神奈川県)</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <div>
+                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">オーガニック</span>
+              </div>
+              <a href="product-detail.html" class="bg-green-700 hover:bg-green-800 text-white px-3 py-1 rounded-md text-sm transition-colors">
+                詳細を見る
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 関連商品4 -->
+        <div class="product-card">
+          <div class="relative">
+            <img src="./public/komatuna.png" alt="プレミアム小松菜" class="w-full h-40 object-cover">
+            <div class="absolute top-2 right-2 bg-green-600 text-white px-2 py-1 rounded-full text-xs">
+              ¥950
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-green-900 text-lg mb-1">プレミアム小松菜</h3>
+            <div class="flex items-center text-sm text-green-700 mb-3">
+              <i class="fas fa-user mr-1 text-green-800"></i>
+              鈴木 一郎 <span class="ml-2 text-xs">(神奈川県)</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <div>
+                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">オーガニック</span>
+              </div>
+              <a href="product-detail.html" class="bg-green-700 hover:bg-green-800 text-white px-3 py-1 rounded-md text-sm transition-colors">
+                詳細を見る
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mt-8 text-center">
+      <a href="category-products.html?category=vegetable" class="text-green-700 hover:text-green-800 font-medium">
+        <i class="fas fa-arrow-left mr-1"></i> 商品一覧に戻る
+      </a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center text-green-800 text-xs py-6 sm:py-8 mt-8 sm:mt-10 opacity-70">
+    &copy; 2025 アグリメディア 農に関わる人を、より多く、より明るく
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // モバイルメニューの動作制御
+      const menuButton = document.getElementById('menuButton');
+      const mobileMenu = document.getElementById('mobileMenu');
+      
+      menuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('active');
+        
+        // ハンバーガーメニューのアニメーション
+        const spans = menuButton.querySelectorAll('span');
+        if (mobileMenu.classList.contains('active')) {
+          spans[0].style.transform = 'rotate(45deg) translate(5px, 6px)';
+          spans[1].style.opacity = '0';
+          spans[2].style.transform = 'rotate(-45deg) translate(5px, -6px)';
+          document.body.style.overflow = 'hidden'; // スクロール防止
+        } else {
+          spans[0].style.transform = 'none';
+          spans[1].style.opacity = '1';
+          spans[2].style.transform = 'none';
+          document.body.style.overflow = ''; // スクロール許可
+        }
+      });
+      
+      // 数量セレクターの動作制御
+      const decreaseBtn = document.getElementById('decreaseQuantity');
+      const increaseBtn = document.getElementById('increaseQuantity');
+      const quantityInput = document.getElementById('quantityInput');
+      
+      decreaseBtn.addEventListener('click', function() {
+        let value = parseInt(quantityInput.value);
+        if (value > 1) {
+          quantityInput.value = value - 1;
+        }
+      });
+      
+      increaseBtn.addEventListener('click', function() {
+        let value = parseInt(quantityInput.value);
+        quantityInput.value = value + 1;
+      });
+      
+      // タブの動作制御
+      const tabButtons = document.querySelectorAll('.tab-button');
+      const tabContents = document.querySelectorAll('.tab-content');
+      
+      tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const tabId = this.getAttribute('data-tab');
+          
+          // アクティブなタブボタンの切り替え
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          
+          // アクティブなタブコンテンツの切り替え
+          tabContents.forEach(content => content.classList.remove('active'));
+          document.getElementById(tabId).classList.add('active');
+        });
+      });
+      
+      // サムネイル画像の動作制御
+      const thumbnails = document.querySelectorAll('.thumbnail-image');
+      const mainImage = document.getElementById('mainImage');
+      
+      thumbnails.forEach(thumb => {
+        thumb.addEventListener('click', function() {
+          // メイン画像の切り替え
+          const newImageSrc = this.getAttribute('data-image');
+          mainImage.src = newImageSrc;
+          
+          // サムネイルの選択状態の切り替え
+          thumbnails.forEach(t => t.parentElement.classList.remove('border-2', 'border-green-600'));
+          thumbnails.forEach(t => t.parentElement.classList.add('border', 'border-gray-200'));
+          this.parentElement.classList.remove('border', 'border-gray-200');
+          this.parentElement.classList.add('border-2', 'border-green-600');
+        });
+      });
+      
+      // URLからの商品情報の読み込み（実際のアプリケーションでは、ここでAPIからデータを取得する）
+      // このデモではハードコードされた商品情報を使用しています
+      
+    });
+  </script>
+</body>
+</html>

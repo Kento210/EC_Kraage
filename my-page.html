@@ -237,7 +237,7 @@
           </a>
         </li>
         <li>
-          <a href="#" class="hover:underline">
+          <a href="search-products.html" class="hover:underline">
             <i class="fas fa-search mr-1"></i>商品を探す
           </a>
         </li>
@@ -266,7 +266,7 @@
           </a>
         </li>
         <li>
-          <a href="#" class="hover:bg-green-50 rounded-md px-3">
+          <a href="search-products.html" class="hover:bg-green-50 rounded-md px-3">
             <i class="fas fa-search mr-2"></i>商品を探す
           </a>
         </li>
@@ -549,95 +549,112 @@
       });
       
       // ローカルストレージから出品商品データを取得
-      const loadProducts = async function() {
+      const loadProducts = function() {
         const productsContainer = document.getElementById('products-container');
         const noProductsMessage = document.getElementById('no-products-message');
         const listingCountElement = document.getElementById('listingCount');
-        const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzobDZTVFVW7-9YNOE-KhU0rkOcvtRDlbqt7I3zfBbLylSYucrTJfw0oiMxu00wC5e_bg/exec';
 
-        try {
-          const response = await fetch(`${GAS_ENDPOINT}?action=getProducts`);
-          const products = await response.json();
+        const products = JSON.parse(localStorage.getItem('products')) || [];
 
-          listingCountElement.textContent = products.length;
+        listingCountElement.textContent = products.length;
 
-          if (products.length === 0) {
-            noProductsMessage.style.display = 'block';
-            productsContainer.style.display = 'none';
-          } else {
-            noProductsMessage.style.display = 'none';
-            productsContainer.style.display = 'grid';
+        if (products.length === 0) {
+          noProductsMessage.style.display = 'block';
+          productsContainer.style.display = 'none';
+        } else {
+          noProductsMessage.style.display = 'none';
+          productsContainer.style.display = 'grid';
 
-            productsContainer.innerHTML = '';
+          productsContainer.innerHTML = '';
 
-            products.forEach(product => {
-              const card = document.createElement('div');
-              card.className = 'my-product-card';
-              card.innerHTML = `
-                <div class="relative">
-                  <img src="./public/${product.image}" alt="${product.name}" class="w-full h-40 object-cover">
-                  <div class="absolute top-2 right-2 bg-green-600 text-white px-2 py-1 rounded-full text-xs">
-                    ¥${product.price}
-                  </div>
+          products.forEach(product => {
+            const card = document.createElement('div');
+            card.className = 'my-product-card';
+            card.innerHTML = `
+              <div class="relative">
+                <img src="./public/${product.image}" alt="${product.name}" class="w-full h-40 object-cover">
+                <div class="absolute top-2 right-2 bg-green-600 text-white px-2 py-1 rounded-full text-xs">
+                  ¥${product.price}
                 </div>
-                <div class="p-4">
-                  <h3 class="font-bold text-green-900 text-lg mb-1">${product.name}</h3>
-                  <p class="text-sm text-green-700 mb-3">出品日: ${product.date}</p>
-                  <div class="text-sm text-gray-600 mb-4 h-20 overflow-hidden">
-                    ${product.description}
-                  </div>
-                  <div class="flex justify-between items-center mb-3">
-                    <span class="text-green-800">
-                      <i class="fas fa-box-open mr-1"></i> ${product.quantity}セット
-                    </span>
-                    <span class="${product.growingMethod === 'organic' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'} px-2 py-1 rounded-full text-xs">
-                      ${product.growingMethod === 'organic' ? 'オーガニック' : '慣行農法'}
-                    </span>
-                  </div>
-                  <div class="flex gap-2">
-                    <button class="flex-1 bg-red-50 hover:bg-red-100 text-red-600 py-2 rounded-md transition duration-200" 
-                            onclick="deleteProduct(${product.id})">
-                      <i class="fas fa-trash-alt mr-1"></i> 削除
-                    </button>
-                  </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-green-900 text-lg mb-1">${product.name}</h3>
+                <p class="text-sm text-green-700 mb-3">出品日: ${product.date}</p>
+                <div class="text-sm text-gray-600 mb-4 h-20 overflow-hidden">
+                  ${product.description}
                 </div>
-              `;
-              productsContainer.appendChild(card);
-            });
-          }
-        } catch (error) {
-          console.error('Error loading products:', error);
+                <div class="flex justify-between items-center mb-3">
+                  <span class="text-green-800">
+                    <i class="fas fa-box-open mr-1"></i> ${product.quantity}セット
+                  </span>
+                  <span class="${product.growingMethod === 'organic' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'} px-2 py-1 rounded-full text-xs">
+                    ${product.growingMethod === 'organic' ? 'オーガニック' : '慣行農法'}
+                  </span>
+                </div>
+                <div class="flex gap-2">
+                  <button class="flex-1 bg-red-50 hover:bg-red-100 text-red-600 py-2 rounded-md transition duration-200" 
+                          onclick="deleteProduct(${product.id})">
+                    <i class="fas fa-trash-alt mr-1"></i> 削除
+                  </button>
+                </div>
+              </div>
+            `;
+            productsContainer.appendChild(card);
+          });
         }
       };
 
       // 商品削除機能
-      window.deleteProduct = async function(productId) {
+      window.deleteProduct = function(productId) {
         if (confirm('この商品を削除してもよろしいですか？')) {
-          try {
-            const response = await fetch(GAS_ENDPOINT, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                action: 'deleteProduct',
-                id: productId
-              })
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-              alert('商品を削除しました。');
-              loadProducts();
-            } else {
-              alert('商品削除に失敗しました。');
-            }
-          } catch (error) {
-            console.error('Error deleting product:', error);
-          }
+          const products = JSON.parse(localStorage.getItem('products')) || [];
+          const updatedProducts = products.filter(product => product.id !== productId);
+          localStorage.setItem('products', JSON.stringify(updatedProducts));
+          alert('商品を削除しました。');
+          loadProducts();
         }
       };
+
+      // 初期データをローカルストレージに保存
+      const initialProducts = [
+        {
+          id: 1,
+          name: '新鮮な小松菜',
+          image: 'komatuna.png',
+          price: 500,
+          description: '有機栽培で育てた新鮮な小松菜です。',
+          quantity: 10,
+          growingMethod: 'organic',
+          date: '2025-04-01',
+          category: 'leafy'
+        },
+        {
+          id: 2,
+          name: '甘いミニトマト',
+          image: 'tomato.png',
+          price: 800,
+          description: '甘くてジューシーなミニトマトです。',
+          quantity: 5,
+          growingMethod: 'organic',
+          date: '2025-04-15',
+          category: 'fruit'
+        },
+        {
+          id: 3,
+          name: 'オーガニック人参',
+          image: 'ningin.jpg',
+          price: 600,
+          description: '栄養たっぷりのオーガニック人参です。',
+          quantity: 8,
+          growingMethod: 'organic',
+          date: '2025-04-20',
+          category: 'root'
+        }
+      ];
+
+      if (!localStorage.getItem('products')) {
+        localStorage.setItem('products', JSON.stringify(initialProducts));
+      }
 
       // 初期化時に商品を読み込む
       loadProducts();
